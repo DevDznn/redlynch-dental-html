@@ -82,6 +82,7 @@ const P = {
   leaf: '<path d="M11 20A7 7 0 0 1 4 13c0-6 6-9 16-10-1 10-4 16-9 17z"/><path d="M4 21c4-4 7-7 10-11"/>',
   search: '<circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/>',
   x: '<path d="M18 6 6 18M6 6l12 12"/>',
+  refresh: '<path d="M21 12a9 9 0 1 1-2.6-6.4L21 8"/><path d="M21 3v5h-5"/>',
 };
 const ico = (n, cls = '') => `<svg${cls ? ` class="${cls}"` : ''} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">${P[n] || P.tooth}</svg>`;
 
@@ -208,7 +209,6 @@ ${page.noCta ? '' : ctaBand(page.cta)}
 </main>
 ${footer()}
 <div class="mcall">${callBtn('', 'Call us')}${bookBtn('white', 'Book online')}</div>
-${prod ? '' : '<div class="staging-flag" aria-hidden="true">Staging build · not indexed</div>'}
 <script src="assets/js/practice-data.js" defer></script>
 <script src="assets/js/main.js" defer></script>
 </body>
@@ -251,8 +251,8 @@ function footer() {
   </div>
  </div>
  <div class="f-bottom">
-  <span>© <span data-year>2026</span> ${F.legalName} · Redlynch Dental · <a href="privacy-policy.html">Privacy policy</a> · <a href="sitemap.xml">Sitemap</a></span>
-  <p>The information on this website is general in nature and is not a substitute for advice from your dentist. ${RISK}</p>
+  <span>© <span data-year>2026</span> ${F.legalName} · Redlynch Dental · <a href="privacy-policy.html">Privacy policy</a></span>
+  <p>${RISK}</p>
  </div>
 </div></footer>`;
 }

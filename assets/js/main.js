@@ -208,16 +208,23 @@
     });
   }
 
-  /* ---------- Map: load the Google Maps iframe only when requested ---------- */
-  document.querySelectorAll('[data-map-src]').forEach(function (box) {
-    var btn = box.querySelector('button');
-    if (!btn) return;
+  /* ---------- Map: one embedded Google map; "Reload map" refreshes the same iframe in place ---------- */
+  document.querySelectorAll('[data-map]').forEach(function (box) {
+    var frame = box.querySelector('iframe'), btn = box.querySelector('.map-reload'), msg = box.querySelector('.map-msg');
+    if (!frame || !btn) return;
+    var src = frame.getAttribute('src'), timer;
+    function done() { clearTimeout(timer); box.classList.remove('is-loading', 'is-error'); btn.disabled = false; msg.textContent = ''; }
+    frame.addEventListener('load', function () { if (box.classList.contains('is-loading')) done(); });
     btn.addEventListener('click', function () {
-      var f = document.createElement('iframe');
-      f.src = box.getAttribute('data-map-src');
-      f.title = 'Map showing Redlynch Dental, 4/2 Chelsea Lane, Redlynch';
-      f.loading = 'lazy'; f.referrerPolicy = 'no-referrer-when-downgrade'; f.allowFullscreen = true;
-      box.innerHTML = ''; box.appendChild(f);
+      if (box.classList.contains('is-loading')) return;
+      box.classList.remove('is-error');
+      box.classList.add('is-loading'); btn.disabled = true; msg.textContent = 'Loading map…';
+      // Cross-origin frames give no error event, so treat a long wait (or no connection) as a failure.
+      timer = setTimeout(function () {
+        box.classList.remove('is-loading'); box.classList.add('is-error'); btn.disabled = false;
+        msg.innerHTML = 'The map couldn’t load. Check your connection and try again, or <a href="' + (D.mapsLink || 'https://www.google.com/maps/search/?api=1&query=Redlynch+Dental+Redlynch+QLD') + '" target="_blank" rel="noopener">open it in Google Maps</a>.';
+      }, navigator.onLine === false ? 0 : 15000);
+      frame.setAttribute('src', src); // re-setting src navigates the frame again, even to the same URL
     });
   });
 

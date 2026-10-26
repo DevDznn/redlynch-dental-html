@@ -7,7 +7,7 @@ A complete static HTML/CSS/JavaScript website for **Redlynch Dental**, 4/2 Chels
 - All practice facts come from the official site (https://www.redlynchdental.com.au/) and are documented in `research/`.
 - The Coral Coast Dental HTML site was used as the design-quality reference only. Redlynch has its own palette, type, layouts and components, and **none** of Coral Coast's content, branding or images.
 
-> **This build is a STAGING build.** Every page carries `noindex,nofollow`, `robots.txt` blocks all crawlers, and a small "Staging build" badge shows on desktop. Follow "Going live" below before launch.
+> **This build is a STAGING build.** Every page carries `noindex,nofollow` and `robots.txt` blocks all crawlers. (There is no visible staging badge; the site looks finished to visitors.) Follow "Going live" below before launch.
 
 ---
 
@@ -40,7 +40,7 @@ A complete static HTML/CSS/JavaScript website for **Redlynch Dental**, 4/2 Chels
 | `blog-why-choose-dental-implants.html` | Blog article (original post by Dr Alex Bornsztejn, 29 Jan 2021) |
 | `contact.html` | Contact, hours, enquiry form, map |
 | `special-offers.html` | New patient offer (from the official Special Offers page) |
-| `privacy-policy.html` | **Draft**: needs practice review; `noindex` |
+| `privacy-policy.html` | Website-only privacy notice; the practice should add its full patient-records policy; `noindex` |
 | `404.html` | Not found; `noindex` |
 
 Also: `sitemap.xml`, `robots.txt`.
@@ -58,7 +58,7 @@ redlynch-dental-html/
 ├── _build/                   Generator (Node.js, no dependencies)
 │   ├── build.js              Entry point; writes pages, sitemap.xml, robots.txt
 │   ├── lib.js                Verified facts, icons, header/nav/footer layout, JSON-LD
-│   ├── services.js           All 15 service pages' content, FAQs and sources
+│   ├── services.js           All 15 service pages' content and FAQs
 │   └── pages.js              Home, About, Team, New Patients, Services, Emergency, FAQ, Blog, Contact…
 ├── research/
 │   ├── official-site-research.md   What was found on the official site, and what is unverified
@@ -82,7 +82,7 @@ npx serve .            # or: python -m http.server 8000
 
 Then open the URL shown, for example `http://localhost:3000`.
 
-Google Fonts (Fraunces, Manrope) need an internet connection. Offline, the site falls back to system fonts. The Google map only loads when a visitor presses "Show the map here".
+Google Fonts (Fraunces, Manrope) need an internet connection. Offline, the site falls back to system fonts. The Google map is embedded directly (lazy-loaded); a "Reload map" button under it refreshes the same map in place.
 
 ## 4. Editing content
 
@@ -106,7 +106,6 @@ Google Fonts (Fraunces, Manrope) need an internet connection. Offline, the site 
 2. Run `node _build/build.js --production`. This:
    - switches every page (except privacy draft and 404) to `index,follow`
    - writes `robots.txt` that allows crawling and points to the sitemap
-   - removes the "Staging build" badge
 3. Upload the whole folder **except** `_build/` and `research/`. Those folders are not needed on the server; keep them in your source copy.
 4. Add 301 redirects from the old URLs (section 6).
 5. Configure the 404 page on the host (for example `ErrorDocument 404 /404.html` on Apache).

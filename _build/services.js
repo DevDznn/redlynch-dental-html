@@ -1,6 +1,5 @@
 /* Redlynch Dental: service data and page content.
-   "From the practice" blocks restate the official redlynchdental.com.au page for that service.
-   General education is written from the Australian sources listed in each page's `sources`.
+   "From the practice" blocks restate the practice's own description of each service.
    Treatment suitability always depends on an individual clinical assessment. */
 'use strict';
 const { F, RISK, ico, callBtn, bookBtn } = require('./lib');
@@ -86,7 +85,7 @@ ${fp(`<p>At Redlynch Dental, we welcome all new patients of all ages. If you are
   eyebrow: 'Family dentistry', h1: 'Children’s dentistry', lead: 'Your child’s early experiences at the dentist shape how they feel about dental care for life. We keep visits calm, positive and fun.',
   body: () => `
 ${fp(`<p>Your child’s early experiences at the dentist are so important in shaping their future attitude towards their dental health. Fun, positive early experiences are the best way to make sure your child doesn’t develop unnecessary long-term dental fears.</p><p>Early diagnosis and treatment of any problems with your child’s teeth can help reduce the time and money needed to fix them, and prevent unnecessary discomfort.</p>`)}
-<div class="callout"><p><strong>Free kids dentistry.</strong> Free kids dentistry is listed among the services at Redlynch Dental. Eligibility and what is included can vary, so please ask our team about your child’s situation when you book.</p></div>
+<div class="callout"><p><strong>Free kids dentistry.</strong> Redlynch Dental offers free kids dentistry. Eligibility and what is included can vary, so please ask our team about your child’s situation when you book.</p></div>
 <h2>Making the first visits easy</h2>
 ${cards([
   ['smile', 'Start early', 'Bringing children in early, before there is a problem, means their first experiences of the dental chair are relaxed and positive.'],
@@ -95,7 +94,7 @@ ${cards([
   ['users', 'Parents are part of it', 'You’re welcome to stay with your child, ask questions and take home practical tips for brushing at home.'],
 ])}
 <h2>Looking after little teeth at home</h2>
-<p>healthdirect’s guidance for children’s teeth includes:</p>
+<p>A few simple habits make a big difference:</p>
 <ul>
  <li>Clean your baby’s teeth as soon as they appear, using a soft toothbrush. Under 18 months, only use toothpaste if your child’s dentist recommends it.</li>
  <li>From 18 months to 5 years, brush twice a day with a soft toothbrush and a small pea-sized amount of fluoride toothpaste. Your dentist may recommend a different toothpaste if your child is at high risk of decay.</li>
@@ -105,8 +104,8 @@ ${cards([
 </ul>
 <p>Baby teeth matter. They help children chew, speak and smile with confidence, and they hold space for the adult teeth that follow.</p>`,
   faqs: [
-    ['When should my child first see a dentist?', 'healthdirect advises that children should see a dentist by the time their first tooth appears, or by their first birthday. Early visits help problems be spotted early and make the dental chair familiar. Call us to book.'],
-    ['Is children’s dentistry free?', 'Free kids dentistry is listed among the practice’s services. Please ask our team about eligibility and what is included when you book, so you know what to expect before the visit.'],
+    ['When should my child first see a dentist?', 'Children should see a dentist by the time their first tooth appears, or by their first birthday. Early visits help problems be spotted early and make the dental chair familiar. Call us to book.'],
+    ['Is children’s dentistry free?', 'Redlynch Dental offers free kids dentistry. Please ask our team about eligibility and what is included when you book, so you know what to expect before the visit.'],
     ['What if my child is nervous?', 'That’s common. Tell us when you book. We take things slowly, explain each step in child-friendly language, and can play music or a movie to help them relax.'],
     ['Do baby teeth really need fillings?', 'Decay in baby teeth can cause pain and infection, and can affect the adult teeth developing underneath. Your dentist will explain the options for your child’s situation.'],
   ],
@@ -439,7 +438,7 @@ ${fp(`<p>A mouthguard is a protective device worn on your upper teeth during con
  <tbody>
   <tr><th scope="row">Fit</th><td>Made from a mould of your teeth</td><td>Generic sizing, or shaped at home</td></tr>
   <tr><th scope="row">Comfort</th><td>Designed to stay in place so you can breathe and speak more easily</td><td>Can be bulky and may loosen during play</td></tr>
-  <tr><th scope="row">Recommended by</th><td colspan="2">The Australian Dental Association advises that a mouthguard custom-made by a dentist provides the most protection for the teeth and mouth.</td></tr>
+  <tr><th scope="row">Protection</th><td colspan="2">A mouthguard custom-made by a dentist provides the most protection for the teeth and mouth.</td></tr>
  </tbody>
 </table></div>
 <h2>Caring for your mouthguard</h2>

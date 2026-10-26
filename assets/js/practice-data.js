@@ -8,6 +8,7 @@ window.REDLYNCH = {
   phoneHref: 'tel:+61740394720',
   email: 'reception@redlynchdental.com.au',
   address: '4/2 Chelsea Lane, Redlynch QLD 4870',
+  mapsLink: 'https://www.google.com/maps/search/?api=1&query=Redlynch+Dental+4%2F2+Chelsea+Lane+Redlynch+QLD+4870',
   bookingUrl: 'https://www.centaurportal.com/d4w/org-2836/search?practiceID=3243',
   timeZone: 'Australia/Brisbane',
   /* Day 0 = Sunday. [open, close] in 24h decimal hours; null = closed. */

@@ -37,8 +37,6 @@ const SUPPORT = [
   { id: 'ella', name: 'Ella', role: 'Dental Assistant', quals: '', img: T + 'ella-dental-assistant.webp' },
 ];
 
-const sourcesBlock = keys => keys && keys.length ? `<div class="sources"><h2>Sources for general information on this page</h2><ul>${keys.map(k => SRC[k]).filter(Boolean).map(([n, u]) => `<li><a href="${u}" target="_blank" rel="noopener">${n} ↗</a></li>`).join('')}</ul><p style="margin:8px 0 0">General information only. Your dentist will advise on what is right for you after an examination.</p></div>` : '';
-
 /* =================================================================== HOME */
 function home() {
   const faqs = [
@@ -49,163 +47,137 @@ function home() {
     ['Can I get an appointment outside normal hours?', 'Our regular hours are Monday to Thursday 8am to 5pm and Friday 8am to 4:30pm. After-hours and weekend appointments are available at request, so call us to ask.'],
     ['I’m nervous about visiting the dentist. Can you help?', 'Yes. The team helps many anxious patients overcome their worries and complete their treatment. Let us know what music you would like, or choose a movie to watch during your treatment, and tell us about any concerns when you book.'],
   ];
-  const tiles = [
-    ['emergency-dental-care', 'em span2', 'Pain, a broken tooth, swelling or a lost denture? We reserve appointments every day.'],
-    ['check-ups-and-dental-cleans', 'photo span2 tall', null],
-    ['childrens-dentistry', 'photo', null],
-    ['dental-implants', 'lime', null],
-    ['invisalign', 'photo', null],
-    ['teeth-whitening', 'ink', null],
-    ['crowns-and-bridges', 'photo', null],
-    ['wisdom-teeth', '', null],
+  // Home service cards: [slug, image object-position]. Emergency first so it is always represented.
+  const cards = [
+    ['emergency-dental-care', '62% 40%'],
+    ['check-ups-and-dental-cleans', '62% 30%'],
+    ['childrens-dentistry', '60% 40%'],
+    ['dental-implants', '50% 50%'],
+    ['invisalign', '50% 50%'],
+    ['teeth-whitening', '28% 40%'],
+    ['crowns-and-bridges', '50% 50%'],
+    ['wisdom-teeth', '50% 50%'],
   ];
-  const tile = ([slug, cls, txt]) => {
+  const card = ([slug, pos]) => {
     const s = byslug[slug];
-    const photo = cls.includes('photo');
-    return `<a class="tile ${cls}" href="${s.file}">${photo ? `<img src="${s.img}" alt="" loading="lazy" decoding="async" width="800" height="500">` : `<span class="ic">${ico(s.icon)}</span>`}<span class="go">${ico('arrow')}</span><h3>${s.navName}</h3><p>${txt || s.short}</p></a>`;
+    const em = s.cat === 'urgent';
+    return `<a class="svc-card${em ? ' em' : ''}" href="${s.file}"><span class="svc-img"><img src="${s.img}" alt="" width="800" height="500" loading="lazy" decoding="async" style="object-position:${pos}">${em ? `<span class="svc-badge">Same-day care</span>` : ''}</span><span class="svc-body"><span class="svc-ic">${ico(s.icon)}</span><h3>${s.navName}</h3><p>${s.short}</p><span class="text-link">${em ? 'What to do now' : 'Learn more'} ${ico('arrow')}</span></span></a>`;
   };
   const body = `
-<section class="hero-home" aria-labelledby="hero-h"><div class="wrap">
- <div class="hero-copy">
-  <span class="eyebrow">Your local dentist in Redlynch, Cairns</span>
-  <h1 id="hero-h">Gentle and <span class="u">affordable</span> dentistry, <em>for the whole family.</em></h1>
-  <p class="lead">A modern dental practice in the Redlynch Commercial Hub, caring for Redlynch, Brinsmead, Edge Hill, Smithfield and the surrounding suburbs of Cairns, from children’s check-ups to high-end cosmetic cases.</p>
-  <div class="actions">${bookBtn('lg')}${callBtn('ghost lg', F.phone)}</div>
-  <ul class="hero-facts">
-   <li>${ico('users')} New patients of all ages</li>
-   <li>${ico('alert')} Emergency appointments daily</li>
-   <li>${ico('wallet')} Payment plans available</li>
-  </ul>
+<section class="hero-home" aria-labelledby="hero-h">
+ <div class="wrap hero-grid">
+  <div class="hero-copy">
+   <span class="eyebrow">Family dentist in Redlynch, Cairns</span>
+   <h1 id="hero-h">Gentle, affordable dentistry <em>for the whole family</em></h1>
+   <p class="lead">A modern dental practice in the Redlynch Commercial Hub, caring for patients of all ages, from children’s check-ups to implants, Invisalign® and cosmetic dentistry.</p>
+   <div class="actions">${bookBtn('lg', 'Book an Appointment')}${callBtn('ghost lg', `Call ${F.phone}`)}</div>
+   <ul class="hero-facts">
+    <li><b>3 dentists</b> caring for local families</li>
+    <li><b>Online booking</b> at a time that suits you</li>
+   </ul>
+  </div>
+  <div class="hero-media">
+   <img src="${T}redlynch-dental-team-group.webp" alt="Three members of the Redlynch Dental team in black uniforms, smiling, including Principal Dentist Dr Alex Bornsztejn on the right" width="1100" height="733" fetchpriority="high">
+   <div class="visit-card">
+    <div class="status" data-status><i></i><span>Mon–Thu 8am–5pm · Fri 8am–4:30pm</span></div>
+    <h2 class="vc-title">Book your visit</h2>
+    <dl>
+     <div><dt>Emergency appointments</dt><dd>Reserved daily</dd></div>
+     <div><dt>New patients</dt><dd>All ages welcome</dd></div>
+     <div><dt>After-hours and weekends</dt><dd>At request</dd></div>
+     <div><dt>Payment plans</dt><dd>Available</dd></div>
+    </dl>
+    ${callBtn('white', `Call ${F.phone}`)}
+   </div>
+  </div>
  </div>
- <div class="hero-visual">
-  <div class="arch"><img src="${T}redlynch-dental-team-group.webp" alt="Three members of the Redlynch Dental team in black uniforms, smiling, including Principal Dentist Dr Alex Bornsztejn on the right" width="1100" height="733" fetchpriority="high"></div>
-  <div class="float-card hours-card"><h3>Opening hours</h3><div class="status" data-status><i></i><span>Mon–Thu 8am–5pm</span></div><p>Mon–Thu 8am–5pm · Fri 8am–4:30pm<br>After-hours and weekends at request</p></div>
-  <div class="float-card cred-card"><span class="dot">${ico('pin')}</span><div><b>4/2 Chelsea Lane</b><span>Redlynch Commercial Hub</span></div></div>
+</section>
+<div class="hero-strip"><div class="wrap">
+ <a href="${F.booking}" target="_blank" rel="noopener">${ico('calendar')}<span><b>Book online</b>Choose a time that suits you<span class="sr-only"> (opens the practice’s online booking system in a new tab)</span></span></a>
+ <a href="${F.tel}">${ico('phone')}<span><b>Call our practice</b>${F.phone}</span></a>
+ <a href="${F.mapsLink}" target="_blank" rel="noopener">${ico('pin')}<span><b>Find us</b>${F.street}, ${F.suburb}<span class="sr-only"> (opens Google Maps in a new tab)</span></span></a>
+</div></div>
+
+<section class="bg-paper" aria-labelledby="help-h"><div class="wrap">
+ <div class="sec-head center" data-reveal><span class="eyebrow">Start here</span><h2 id="help-h">How can we help you today?</h2><p>Choose where you’d like to start, and we’ll take you to the right place.</p></div>
+ <nav class="paths" aria-label="Where to start" data-reveal-group>
+  <a class="path em" href="emergency-dental-care.html"><span class="pi">${ico('alert')}</span><b>I’m in pain</b><span>Emergency dental care</span></a>
+  <a class="path" href="new-patients.html"><span class="pi">${ico('smile')}</span><b>I’m a new patient</b><span>What to expect</span></a>
+  <a class="path" href="childrens-dentistry.html"><span class="pi">${ico('child')}</span><b>It’s for my child</b><span>Children’s dentistry</span></a>
+  <a class="path" href="special-offers.html"><span class="pi">${ico('tag')}</span><b>New patient offer</b><span>Check-up, clean and X-rays</span></a>
+ </nav>
+ <div class="em-panel" data-reveal>
+  <div>
+   <span class="em-tag">${ico('alert')} Dental emergency</span>
+   <h3 id="em-h">In pain? We reserve emergency appointments every day.</h3>
+   <p>Painful teeth or gums, broken teeth and fillings, facial swelling, trauma, or a broken or lost denture. Problems can get worse quickly, so call us straight away.</p>
+  </div>
+  <div class="actions"><a class="btn ember" href="${F.tel}">${ico('phone')} Call ${F.phone}</a><a class="btn ghost" href="emergency-dental-care.html">What to do now ${ARROW}</a></div>
  </div>
 </div></section>
 
-<div class="wrap"><nav class="paths" aria-label="Quick links" data-reveal-group>
- <a class="path em" href="emergency-dental-care.html"><span class="pi">${ico('alert')}</span><span><b>I’m in pain</b><span>Emergency dental care</span></span></a>
- <a class="path" href="new-patients.html"><span class="pi">${ico('smile')}</span><span><b>I’m a new patient</b><span>What to expect</span></span></a>
- <a class="path" href="childrens-dentistry.html"><span class="pi">${ico('child')}</span><span><b>It’s for my child</b><span>Children’s dentistry</span></span></a>
- <a class="path" href="special-offers.html"><span class="pi">${ico('tag')}</span><span><b>New patient offer</b><span>Check-up, clean and X-rays</span></span></a>
-</nav></div>
-
-<section class="sec-tight" aria-label="Why choose Redlynch Dental"><div class="wrap">
- <div class="why-band" style="border-radius:var(--r-lg);overflow:hidden"><ul data-reveal-group>
-  <li>${ico('wallet')}<span>Affordable pricing<small>The very best treatment at competitive prices</small></span></li>
-  <li>${ico('moon')}<span>After-hours and weekend appointments<small>Available at request</small></span></li>
-  <li>${ico('heart')}<span>Knowledgeable, caring, gentle staff<small>More than just a job to us</small></span></li>
-  <li>${ico('cpu')}<span>Modern equipment<small>In a relaxing environment</small></span></li>
-  <li>${ico('calendar')}<span>Payment plans available<small>Ask our team about options</small></span></li>
- </ul></div>
-</div></section>
-
-<section class="bg-paper" aria-labelledby="intro-h"><div class="wrap split wide-left">
+<section aria-labelledby="intro-h"><div class="wrap split">
  <div data-reveal>
   <span class="eyebrow">About the practice</span>
-  <h2 id="intro-h" class="sr-only">About Redlynch Dental</h2>
-  <p class="pull">The very best dental treatment, at <em>competitive prices</em>, in the most relaxing environment possible.</p>
-  <p>Redlynch Dental is a modern Cairns dental practice located within the Redlynch Commercial Hub. We cater to all of your family’s dental needs, from children’s dentistry all the way up to high-end cosmetic cases, and everything in between.</p>
-  <p>All of our staff are knowledgeable and passionate about the work we do. We take the time to listen to you, understand what you want to achieve, and then help guide you down the right path to get there. Many of our patients tell us they wish they had come to see us earlier.</p>
-  <ul class="chips" aria-label="Areas we serve">${F.suburbs.map(s => `<li>${s}</li>`).join('')}</ul>
-  <p class="mt-2"><a class="text-link" href="about.html">More about Redlynch Dental ${ico('arrow')}</a></p>
+  <h2 id="intro-h">The very best treatment, at competitive prices, in a relaxing environment.</h2>
+  <p>Redlynch Dental caters to all of your family’s dental needs, from children’s dentistry all the way up to high-end cosmetic cases. We take the time to listen, understand what you want to achieve, and guide you down the right path to get there.</p>
+  <ul class="feature-list">
+   <li>${ico('wallet')}<span><b>Affordable pricing</b>Competitive prices and payment plans</span></li>
+   <li>${ico('moon')}<span><b>Flexible appointments</b>After-hours and weekends at request</span></li>
+   <li>${ico('heart')}<span><b>Caring, gentle staff</b>More than just a job to us</span></li>
+   <li>${ico('cpu')}<span><b>Modern equipment</b>In a relaxing environment</span></li>
+  </ul>
+  <p class="area-note">Proudly serving ${F.suburbs.slice(0, 4).join(', ')} and surrounding Cairns suburbs.</p>
+  <a class="btn ghost" href="about.html">More about the practice ${ARROW}</a>
  </div>
- <div class="stack-img" data-reveal>
-  <div class="main"><img src="assets/images/services/dental-examination.webp" alt="A dentist examining a smiling patient’s teeth" width="1100" height="459" loading="lazy" decoding="async"></div>
-  <div class="note"><b>Let us know what music you’d like</b>Or choose a movie to watch while your treatment is completed. We help many anxious patients overcome their worries.</div>
- </div>
+ <div class="media-frame ratio-4-3" data-reveal><img src="assets/images/services/dental-examination.webp" alt="A dentist examining a smiling patient’s teeth" width="1100" height="459" loading="lazy" decoding="async" style="object-position:64% 30%"></div>
 </div></section>
 
-<section aria-labelledby="svc-h"><div class="wrap">
- <div class="sec-head" data-reveal><span class="eyebrow">Our services</span><h2 id="svc-h">Everything your family needs, under one roof.</h2><p>Fifteen services, from routine check-ups and children’s dentistry to implants, Invisalign® and emergency care.</p></div>
- <div class="bento" data-reveal-group>${tiles.map(tile).join('')}</div>
- <p class="mt-2 center"><a class="btn dark" href="services.html">View all 15 services ${ARROW}</a></p>
+<section class="bg-paper" aria-labelledby="svc-h"><div class="wrap">
+ <div class="sec-head row" data-reveal><div><span class="eyebrow">Our services</span><h2 id="svc-h">Everything your family needs, under one roof</h2><p>From routine check-ups and children’s dentistry to implants, Invisalign® and same-day emergency care.</p></div><a class="btn ghost" href="services.html">Explore all 15 services ${ARROW}</a></div>
+ <div class="svc-cards" data-reveal-group>${cards.map(card).join('')}</div>
 </div></section>
 
-<section class="bg-forest" aria-labelledby="comfort-h"><div class="wrap">
- <div class="split wide-right top">
-  <div class="sec-head" data-reveal style="margin-bottom:0"><span class="eyebrow">Our approach</span><h2 id="comfort-h">We listen first. Then we help you get where you want to be.</h2><p>Dental visits shouldn’t feel rushed or intimidating. We take the time to understand what matters to you, explain your options clearly, and make your visit as comfortable as we can.</p><p class="mt-2">${bookBtn()}</p></div>
-  <div class="comfort" style="grid-template-columns:1fr" data-reveal-group>
-   <div><span>${ico('music')}</span><h3>Your choice of music or a movie</h3><p>Let us know what music we can play for you, or choose a movie to watch while your treatment is completed.</p></div>
-   <div><span>${ico('heart')}</span><h3>Care for anxious patients</h3><p>We help many anxious patients overcome their apprehensions and complete their dental treatment, at a pace that suits them.</p></div>
-   <div><span>${ico('book')}</span><h3>A clear, printed treatment plan</h3><p>After a comprehensive check-up you receive a printed plan with the most accurate estimate we can give of the time and cost involved.</p></div>
-  </div>
+<section class="bg-forest" aria-labelledby="comfort-h"><div class="wrap split top">
+ <div data-reveal><span class="eyebrow">Our approach</span><h2 id="comfort-h">We listen first, then help you get where you want to be.</h2><p class="lead">Dental visits shouldn’t feel rushed or intimidating. We take the time to understand what matters to you, explain your options and costs clearly, and make your visit as comfortable as we can.</p><div class="actions mt-1">${bookBtn('', 'Book an Appointment')}</div></div>
+ <div class="comfort" data-reveal-group>
+  <div><span>${ico('music')}</span><div><h3>Your choice of music or a movie</h3><p>Let us know what music we can play for you, or choose a movie to watch while your treatment is completed.</p></div></div>
+  <div><span>${ico('heart')}</span><div><h3>Care for anxious patients</h3><p>We help many anxious patients overcome their apprehensions and complete their dental treatment, at a pace that suits them.</p></div></div>
+  <div><span>${ico('book')}</span><div><h3>A clear, printed treatment plan</h3><p>After a comprehensive check-up you receive a printed plan with the most accurate estimate we can give of the time and cost involved.</p></div></div>
+  <div><span>${ico('wallet')}</span><div><h3>Flexible ways to pay</h3><p>Payment plans are available for larger treatment, and implant consultations are complimentary. Ask our team which options suit you.</p></div></div>
  </div>
 </div></section>
 
 <section aria-labelledby="team-h"><div class="wrap">
- <div class="split" style="align-items:end;margin-bottom:40px"><div class="sec-head" data-reveal style="margin-bottom:0"><span class="eyebrow">Meet the dentists</span><h2 id="team-h">Friendly faces, gentle hands.</h2></div><p data-reveal style="margin:0">Our dentists trained at La Trobe University and James Cook University, and between them bring experience from across Queensland and overseas. <a href="our-team.html">Read the team’s full profiles</a>.</p></div>
- <div class="team-row" data-reveal-group>${TEAM.map(m => `<a class="member" href="our-team.html#${m.id}"><div class="arch"><img src="${m.img}" alt="${m.name}, ${m.role} at Redlynch Dental" width="${m.w}" height="${m.h}" loading="lazy" decoding="async"></div><h3>${m.name}</h3><span class="role">${m.role}</span><span class="qual">${m.quals}</span></a>`).join('')}</div>
+ <div class="sec-head row" data-reveal><div><span class="eyebrow">Meet the dentists</span><h2 id="team-h">Friendly faces, gentle hands</h2><p>Our dentists trained at La Trobe University and James Cook University, and bring experience from across Queensland and overseas.</p></div><a class="btn ghost" href="our-team.html">Meet our team ${ARROW}</a></div>
+ <div class="team-row cards" data-reveal-group>${TEAM.map(m => `<a class="member" href="our-team.html#${m.id}"><div class="arch"><img src="${m.img}" alt="${m.name}, ${m.role} at Redlynch Dental" width="${m.w}" height="${m.h}" loading="lazy" decoding="async"></div><div class="m-body"><h3>${m.name}</h3><span class="role">${m.role}</span><span class="qual">${m.quals}</span></div></a>`).join('')}</div>
  <div class="support-row" data-reveal-group>${SUPPORT.map(m => `<div class="support"><img src="${m.img}" alt="${m.name}, ${m.role} at Redlynch Dental" width="92" height="92" loading="lazy" decoding="async"><div><h3>${m.name}</h3><p>${m.role}${m.quals ? ` · ${m.quals}` : ''}</p></div></div>`).join('')}</div>
 </div></section>
 
 <section class="bg-sand" aria-labelledby="np-h"><div class="wrap">
- <div class="sec-head" data-reveal><span class="eyebrow">New patients</span><h2 id="np-h">New to Redlynch Dental? Start with a thorough check-up.</h2><p>We welcome new patients of all ages. Your first visit is a comprehensive consultation and clean, so we can understand your oral health and plan your care together.</p></div>
  <div class="offer" data-reveal>
   <div class="o-img"><img src="assets/images/offers/new-patient-special-offer.webp" alt="New patient special offer: comprehensive dental check-up; all necessary X-rays including full-face X-rays; scale, clean and polish; fluoride treatment; treatment plan. Gap free with any health fund. Not in a health fund? All the above for only $199. T&amp;Cs apply." width="880" height="1100" loading="lazy" decoding="async"></div>
   <div class="o-body">
    <span class="eyebrow">New patient special offer</span>
-   <h3>Your first visit includes</h3>
-   ${`<ul class="ticks"><li>Comprehensive dental check-up</li><li>All necessary X-rays, including full-face X-rays</li><li>Scale, clean and polish</li><li>Fluoride treatment</li><li>A printed treatment plan</li></ul>`}
+   <h2 id="np-h">New to Redlynch Dental? Start with a thorough check-up.</h2>
+   <p>We welcome new patients of all ages. Your first visit includes:</p>
+   <ul class="ticks"><li>Comprehensive dental check-up</li><li>All necessary X-rays, including full-face X-rays</li><li>Scale, clean and polish</li><li>Fluoride treatment</li><li>A printed treatment plan</li></ul>
    <div class="price-strip"><div><b>Gap free</b><span>with any health fund</span></div><div><b>$199</b><span>if you’re not in a health fund</span></div></div>
-   <p class="fine">Terms and conditions apply. Offer as published by Redlynch Dental; please confirm the current offer and its conditions with our team when booking.</p>
-   <div class="actions mt-1">${bookBtn()}<a class="btn ghost" href="new-patients.html">New patient information</a></div>
+   <p class="fine">Terms and conditions apply. Ask our team for full details when you book.</p>
+   <div class="actions mt-1">${bookBtn('', 'Book an Appointment')}<a class="btn ghost" href="new-patients.html">New patient information</a></div>
   </div>
- </div>
-</div></section>
-
-<section aria-labelledby="em-h"><div class="wrap">
- <div class="em-band" data-reveal>
-  <div>
-   <span class="eyebrow" style="color:#fff">Dental emergencies</span>
-   <h2 id="em-h">In pain? Don’t wait. Call us now.</h2>
-   <p>Dental emergencies can be painful and distressing, so we reserve specific appointments every day for them. Problems can get worse quickly if left untreated.</p>
-   <a class="big-tel" href="${F.tel}">${ico('phone')} ${F.phone}</a>
-   <div class="actions"><a class="btn white" href="emergency-dental-care.html">What counts as an emergency ${ARROW}</a></div>
-  </div>
-  <ul aria-label="Dental emergencies we see">
-   <li>${ico('tooth')} Painful tooth or gums</li>
-   <li>${ico('broken')} Broken teeth and fillings</li>
-   <li>${ico('swelling')} Facial swelling</li>
-   <li>${ico('bolt')} Trauma to the face, teeth or gums</li>
-   <li>${ico('denture')} Broken or lost denture</li>
-  </ul>
  </div>
 </div></section>
 
 <section class="bg-paper" aria-labelledby="fam-h"><div class="wrap split">
- <div data-reveal>
-  <div class="arch" style="aspect-ratio:4/4.2;max-width:520px"><img src="assets/images/services/childrens-dentistry-smiling-girl.webp" alt="A smiling young girl in a dental chair" width="1100" height="729" loading="lazy" decoding="async" style="object-position:62% 50%"></div>
- </div>
+ <div class="media-frame ratio-4-3" data-reveal><img src="assets/images/services/childrens-dentistry-smiling-girl.webp" alt="A smiling young girl in a dental chair" width="1100" height="729" loading="lazy" decoding="async" style="object-position:62% 50%"></div>
  <div data-reveal>
   <span class="eyebrow">Preventive and family dentistry</span>
   <h2 id="fam-h">Healthy habits start young, and last a lifetime.</h2>
-  <p>Fun, positive early experiences at the dentist help children grow up without unnecessary dental fears. Free kids dentistry is listed among our services. Ask our team about eligibility when you book.</p>
+  <p>Fun, positive early experiences at the dentist help children grow up without unnecessary dental fears. We offer free kids dentistry, so ask our team about eligibility when you book.</p>
   <p>For the whole family, regular check-ups and cleans let us find and treat small problems early, which saves time and money and helps you keep your natural teeth.</p>
-  <ul class="ticks">
-   <li>Brush twice a day with a fluoride toothpaste</li>
-   <li>Clean between your teeth every day</li>
-   <li>Keep sugary food and drinks to a minimum, and drink tap water</li>
-   <li>Wear a custom mouthguard for contact sport</li>
-  </ul>
   <div class="actions">${['childrens-dentistry', 'check-ups-and-dental-cleans', 'mouthguards'].map(s => `<a class="btn ${s === 'childrens-dentistry' ? '' : 'ghost'} sm" href="${byslug[s].file}">${byslug[s].navName}</a>`).join('')}</div>
-  <p class="fine mt-1">General oral health information. See the <a href="https://www.healthdirect.gov.au/treatments-and-self-care/looking-after-your-baby-or-childs-teeth" target="_blank" rel="noopener">healthdirect guide to children’s teeth ↗</a>.</p>
  </div>
-</div></section>
-
-<section class="bg-ink" aria-labelledby="pay-h"><div class="wrap split wide-left">
- <div data-reveal>
-  <span class="eyebrow">Costs and payment</span>
-  <h2 id="pay-h">Clear costs, and flexible ways to pay.</h2>
-  <p>We pride ourselves on providing the very best treatment at competitive prices. Before treatment begins, you receive a printed treatment plan with the most accurate estimate we can give of the time and cost involved.</p>
-  <p>Payment plans are available, so ask our team which options suit you.</p>
- </div>
- <ol class="num-list" data-reveal-group>
-  <li><div><h3>Printed treatment plan</h3><p>Know the time and cost estimate up front.</p></div></li>
-  <li><div><h3>Payment plans available</h3><p>Ask us about spreading the cost of larger treatment.</p></div></li>
-  <li><div><h3>Complimentary implant consultation</h3><p>Find out whether implants suit you, and what they would cost.</p></div></li>
- </ol>
 </div></section>
 
 <section aria-labelledby="faq-h"><div class="wrap split top">
@@ -217,7 +189,7 @@ function home() {
  <div class="sec-head" data-reveal><span class="eyebrow">Visit us</span><h2 id="visit-h">Find us in the Redlynch Commercial Hub</h2></div>
  <div class="contact-grid">
   <div class="c-cards" data-reveal-group>
-   <div class="c-card"><span class="ic">${ico('pin')}</span><div><h3>Address</h3><p><a href="${F.mapsLink}" target="_blank" rel="noopener">${F.street}<br>${F.suburb} ${F.state} ${F.postcode}</a></p></div></div>
+   <div class="c-card"><span class="ic">${ico('pin')}</span><div><h3>Address</h3><p><a href="${F.mapsLink}" target="_blank" rel="noopener">${F.street}<br>${F.suburb} ${F.state} ${F.postcode}<span class="sr-only"> (opens Google Maps in a new tab)</span></a></p></div></div>
    <div class="c-card"><span class="ic">${ico('phone')}</span><div><h3>Phone</h3><p><a href="${F.tel}">${F.phone}</a></p></div></div>
    <div class="c-card"><span class="ic">${ico('mail')}</span><div><h3>Email</h3><p><a href="mailto:${F.email}">${F.email}</a></p></div></div>
    <div class="c-card"><span class="ic">${ico('clock')}</span><div style="flex:1"><h3>Opening hours</h3>${hoursRows()}</div></div>
@@ -228,8 +200,14 @@ function home() {
   return { file: 'index.html', section: 'home', title: 'Redlynch Dental | Gentle & Affordable Dentist in Redlynch, Cairns', desc: `Redlynch Dental is a modern family dental practice at ${F.address}. Check-ups, children’s dentistry, implants, Invisalign® and emergency appointments daily. Call ${F.phone}.`, body, ld: [faqLd(faqs), { '@context': 'https://schema.org', '@type': 'WebSite', name: 'Redlynch Dental', url: L.SITE_URL }], cta: { h: 'Book your visit to Redlynch Dental', p: 'New patients of all ages are welcome. Call us or book online, and we’ll find a time that suits you.' } };
 }
 
+/* One embedded map. main.js wires the reload button, loading state and failure message. */
 function mapBox() {
-  return `<div class="map" data-map-src="${esc(F.mapEmbed)}"><div class="map-fallback"><div><p style="margin-bottom:14px"><strong>Redlynch Dental</strong><br>${F.address}</p><div class="actions" style="justify-content:center"><button class="btn dark sm" type="button">${ico('pin')} Show the map here</button><a class="btn ghost sm" href="${F.mapsLink}" target="_blank" rel="noopener">Open in Google Maps ↗</a></div><p class="fine" style="margin-top:12px">The map loads from Google when you choose to show it.</p></div></div></div>`;
+  return `<figure class="map" data-map>
+ <div class="map-frame"><iframe src="${esc(F.mapEmbed)}" title="Map showing Redlynch Dental, ${F.address}" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+  <div class="map-state" role="status" aria-live="polite"><span class="map-spin" aria-hidden="true"></span><span class="map-msg">Loading map…</span></div>
+ </div>
+ <figcaption class="map-bar"><span class="map-addr">${ico('pin')}<span><b>Redlynch Dental</b> ${F.street}, ${F.suburb}</span></span><button class="map-reload" type="button">${ico('refresh')}<span>Reload map</span></button></figcaption>
+</figure>`;
 }
 
 /* =================================================================== ABOUT */
@@ -377,7 +355,7 @@ function newPatients() {
   <div class="o-img"><img src="assets/images/offers/new-patient-special-offer.webp" alt="New patient special offer: comprehensive dental check-up; all necessary X-rays including full-face X-rays; scale, clean and polish; fluoride treatment; treatment plan. Gap free with any health fund. Not in a health fund? All the above for only $199. T&amp;Cs apply." width="880" height="1100" loading="lazy" decoding="async"></div>
   <div class="o-body"><span class="eyebrow">New patient special offer</span><h3>Comprehensive check-up, X-rays, clean and treatment plan</h3>
    <div class="price-strip"><div><b>Gap free</b><span>with any health fund</span></div><div><b>$199</b><span>if you’re not in a health fund</span></div></div>
-   <p class="fine">Terms and conditions apply. Please confirm the current offer and its conditions with our team when booking.</p>
+   <p class="fine">Terms and conditions apply. Ask our team for full details when you book.</p>
    <div class="actions mt-1">${bookBtn()}<a class="btn ghost" href="special-offers.html">Offer details</a></div></div>
  </div>
 </div></section>
@@ -427,7 +405,7 @@ function servicePage(s) {
  ${visual}
 </div></section>
 <section class="bg-paper"><div class="wrap layout">
- <article class="prose">${s.body()}${sourcesBlock(s.sources)}</article>
+ <article class="prose">${s.body()}</article>
  ${sideBar()}
 </div></section>
 ${s.faqs && s.faqs.length ? `<section aria-labelledby="sfaq-h"><div class="wrap split top"><div class="sec-head" data-reveal><span class="eyebrow">Questions</span><h2 id="sfaq-h">${s.navName.replace('®', '®')}: your questions answered</h2><p>Still unsure? Call <a href="${F.tel}">${F.phone}</a> and talk to our team.</p></div>${faqList(s.faqs)}</div></section>` : ''}
@@ -474,7 +452,7 @@ function emergency() {
   <p class="small">We will always strive to make time for you to be seen as soon as possible. ${F.street}, ${F.suburb}.</p>
  </div>
 </div></section>
-<div class="call-000" role="note"><div class="wrap">${ico('alert')}<p><strong>Call <a href="tel:000">000</a> or go to your nearest hospital emergency department</strong> if you have swelling that affects your breathing, swallowing or eye, bleeding that won’t stop, a serious head or facial injury, or you feel very unwell. This page is general information and can’t diagnose your problem.</p></div></div>
+<div class="call-000" role="note"><div class="wrap">${ico('alert')}<p><strong>Call <a href="tel:000">000</a> or go to your nearest hospital emergency department</strong> if you have swelling that affects your breathing, swallowing or eye, bleeding that won’t stop, a serious head or facial injury, or you feel very unwell.</p></div></div>
 
 <section class="bg-paper" aria-labelledby="what-h"><div class="wrap">
  <div class="sec-head" data-reveal><span class="eyebrow">What counts as a dental emergency</span><h2 id="what-h">If it hurts, it’s broken or it’s swollen, call us.</h2><p>Dental emergencies are often serious, and if left untreated they can get worse quickly. A dental emergency may include:</p></div>
@@ -505,14 +483,13 @@ function emergency() {
 </div></section>
 
 <section class="bg-paper" aria-labelledby="efaq-h"><div class="wrap split top">
- <div class="sec-head" data-reveal><span class="eyebrow">Questions</span><h2 id="efaq-h">Emergency dental questions</h2><p>This is general guidance only. When you call, our team will advise you based on your situation.</p></div>
+ <div class="sec-head" data-reveal><span class="eyebrow">Questions</span><h2 id="efaq-h">Emergency dental questions</h2><p>When you call, our team will advise you based on your situation.</p></div>
  ${faqList(faqs)}
 </div></section>
 
 <section class="sec-tight" aria-labelledby="erel-h"><div class="wrap">
  <h2 id="erel-h" style="font-size:1.7rem">Treatments that often follow an emergency</h2>
  <div class="related" data-reveal-group>${['root-canal-therapy', 'extractions', 'crowns-and-bridges'].map(r => byslug[r]).map(r => `<a class="rel" href="${r.file}">${r.img ? `<img src="${r.img}" alt="" width="84" height="84" loading="lazy" decoding="async"${r.imgContain ? ' style="object-fit:contain;background:#fff"' : ''}>` : `<span class="ph">${ico(r.icon)}</span>`}<span><b>${r.name}</b><span>${r.short.split('.')[0]}.</span></span></a>`).join('')}</div>
- ${sourcesBlock(['problems', 'abscess', 'rct'])}
 </div></section>`;
   const ld = [{ '@context': 'https://schema.org', '@type': 'MedicalProcedure', name: 'Emergency dental care', description: s.short, url: L.SITE_URL + s.file, provider: { '@id': L.SITE_URL + '#dentist' } }, faqLd(faqs)];
   return { file: s.file, section: 'services', title: s.title, desc: s.desc, body, trail, ld, ogImage: s.img, cta: { h: 'Dental emergency? Call us now.', p: `We reserve appointments every day for dental emergencies. Call ${F.phone} and our team will help.` } };
@@ -525,7 +502,7 @@ function faq() {
     ['new', 'New patients', [
       ['Are you accepting new patients?', 'Yes. Redlynch Dental welcomes new patients of all ages.'],
       ['What happens at my first visit?', 'We recommend starting with a thorough consultation and dental clean. We examine your teeth, gums and jaw joints, take the X-rays you need, photograph any potential problems, scale, clean and polish your teeth, apply fluoride, and give you a printed treatment plan. <a href="new-patients.html">More about your first visit</a>.'],
-      ['Is there a new patient offer?', 'The practice publishes a new patient offer for a comprehensive check-up, necessary X-rays, a scale, clean and polish, fluoride and a treatment plan: gap free with any health fund, or $199 if you are not in a health fund. Terms and conditions apply. <a href="special-offers.html">See the offer</a> and confirm the details with our team when you book.'],
+      ['Is there a new patient offer?', 'We offer new patients a comprehensive check-up, necessary X-rays, a scale, clean and polish, fluoride and a treatment plan: gap free with any health fund, or $199 if you are not in a health fund. Terms and conditions apply. <a href="special-offers.html">See the offer</a>.'],
       ['What should I bring?', 'It helps to bring a list of your medications and any allergies, details of any medical conditions, your health fund card if you have extras cover, and any recent dental X-rays or records if you have them.'],
     ]],
     ['appointments', 'Appointments', [
@@ -542,10 +519,10 @@ function faq() {
       ['My gums bleed when I brush. Should I worry?', 'Bleeding gums can be an early sign of gum inflammation. It is worth booking a check-up and clean. See <a href="check-ups-and-dental-cleans.html">check-ups and cleans</a>.'],
     ]],
     ['children', 'Children’s dentistry', [
-      ['When should my child first see a dentist?', 'healthdirect advises that children should see a dentist by the time their first tooth appears, or by their first birthday. Call us to book.'],
-      ['Is children’s dentistry free?', 'Free kids dentistry is listed among the practice’s services. Please ask our team about eligibility and what is included when you book.'],
-      ['What toothpaste should my child use?', 'healthdirect advises a small pea-sized amount of fluoride toothpaste, twice a day, from 18 months to 5 years. Under 18 months, only use toothpaste if your child’s dentist recommends it. Ask us if you’re unsure.'],
-      ['Does my child need a mouthguard?', 'Children who play contact sport should wear a mouthguard. The Australian Dental Association advises that a mouthguard custom-made by a dentist gives the most protection. See <a href="mouthguards.html">mouthguards</a>.'],
+      ['When should my child first see a dentist?', 'Children should see a dentist by the time their first tooth appears, or by their first birthday. Call us to book.'],
+      ['Is children’s dentistry free?', 'Redlynch Dental offers free kids dentistry. Please ask our team about eligibility and what is included when you book.'],
+      ['What toothpaste should my child use?', 'A small pea-sized amount of fluoride toothpaste, twice a day, from 18 months to 5 years. Under 18 months, only use toothpaste if your child’s dentist recommends it. Ask us if you’re unsure.'],
+      ['Does my child need a mouthguard?', 'Children who play contact sport should wear a mouthguard. A mouthguard custom-made by a dentist gives the most protection. See <a href="mouthguards.html">mouthguards</a>.'],
     ]],
     ['emergency', 'Emergency dentistry', [
       ['What counts as a dental emergency?', 'Painful teeth or gums, broken teeth or fillings, facial swelling, trauma to the face, teeth or gums, and broken or lost dentures. <a href="emergency-dental-care.html">Emergency dental care</a>.'],
@@ -572,8 +549,7 @@ function faq() {
 </div></section>
 <section class="bg-paper"><div class="wrap faq-cats">
  <nav aria-label="FAQ categories"><ul class="faq-nav" data-spy>${G.map(([id, n]) => `<li><a href="#${id}">${n}</a></li>`).join('')}</ul></nav>
- <div>${G.map(([id, n, q]) => `<div class="faq-group" id="${id}"><h2>${n}</h2>${faqList(q)}</div>`).join('')}
- <p class="fine">General information only. Practice details were checked against the Redlynch Dental website; please confirm offers and availability with our team.</p></div>
+ <div>${G.map(([id, n, q]) => `<div class="faq-group" id="${id}"><h2>${n}</h2>${faqList(q)}</div>`).join('')}</div>
 </div></section>`;
   return { file: 'faq.html', section: 'patient', title: 'Frequently Asked Questions | Redlynch Dental, Cairns', desc: 'Answers to common questions about Redlynch Dental: new patients, appointments, children’s dentistry, emergencies, cosmetic and restorative treatment, and payment.', body, trail, ld: [faqLd(all)] };
 }
@@ -601,7 +577,7 @@ function blog() {
  </a>
 </div></section>
 <section><div class="wrap">
- <div class="sec-head" data-reveal><span class="eyebrow">Patient guides</span><h2>Explore our treatment guides</h2><p>Detailed information on common treatments, written for patients, with links to reputable Australian health sources.</p></div>
+ <div class="sec-head" data-reveal><span class="eyebrow">Patient guides</span><h2>Explore our treatment guides</h2><p>Clear, practical information on common treatments, written for our patients.</p></div>
  <div class="guide-grid" data-reveal-group>${guides.map(([sl, k, p]) => `<a class="guide" href="${byslug[sl].file}"><span class="k">${k}</span><h3>${byslug[sl].name}</h3><p>${p}</p><span class="text-link" style="margin-top:auto">Read guide ${ico('arrow')}</span></a>`).join('')}</div>
 </div></section>`;
   return { file: 'blog.html', section: 'blog', title: 'Blog | Dental Health Articles from Redlynch Dental, Cairns', desc: 'Dental health articles and patient guides from Redlynch Dental, Cairns, including why choose dental implants, by Principal Dentist Dr Alex Bornsztejn.', body, trail };
@@ -630,7 +606,6 @@ function blogPost() {
   <h2>Is an implant right for you?</h2>
   <p>Not everyone is suitable for implants, and every case is different. If you would like more information about dental implants, call our friendly team on <a href="${F.tel}">${F.phone}</a> to book a consultation. Read more about <a href="dental-implants.html">dental implants at Redlynch Dental</a>, including the three stages of treatment.</p>
   <p class="risk">${RISK}</p>
-  <div class="editor-note"><strong>Editor’s note:</strong> This article was first published on the Redlynch Dental website on 29 January 2021. It has been lightly edited for this site: the closing call to action now gives Redlynch Dental’s own contact details, and the description of the implant is worded as being placed in the jaw.</div>
   <p class="mt-2"><a class="text-link" href="blog.html">${ico('arrow')} Back to all articles</a></p>
  </article>
 </div></section>`;
@@ -659,7 +634,7 @@ function contact() {
  <div data-reveal>
   <form class="form" id="enquiry-form" data-mailto="${F.email}" novalidate aria-describedby="form-intro">
    <h2 style="font-size:1.8rem">Send an enquiry</h2>
-   <p id="form-intro" class="fine" style="margin-bottom:20px">Fields marked * are required. Pressing “Prepare email” opens your own email app with your message ready to send to ${F.email}. Nothing is sent from this page. For urgent problems, please call.</p>
+   <p id="form-intro" class="fine" style="margin-bottom:20px">Fields marked * are required. Pressing “Prepare email” opens your email app with your message ready to send to ${F.email}. For urgent problems, please call us.</p>
    <div class="fields">
     <div class="field"><label for="f-name">Name *</label><input id="f-name" name="name" autocomplete="name" required><span class="err" data-err="f-name" aria-live="polite"></span></div>
     <div class="field"><label for="f-phone">Phone *</label><input id="f-phone" name="phone" type="tel" autocomplete="tel" required><span class="err" data-err="f-phone" aria-live="polite"></span></div>
@@ -694,7 +669,7 @@ function specialOffers() {
    <h2 style="font-size:clamp(1.6rem,2.6vw,2.2rem)">Everything you need for a fresh start</h2>
    <ul class="ticks"><li>Comprehensive dental check-up</li><li>All necessary X-rays, including full-face X-rays</li><li>Scale, clean and polish</li><li>Fluoride treatment</li><li>Treatment plan</li></ul>
    <div class="price-strip"><div><b>Gap free</b><span>with any health fund</span></div><div><b>$199</b><span>not in a health fund</span></div></div>
-   <p class="fine">Terms and conditions apply to all offers. This offer is reproduced from the Redlynch Dental website. Please ask our team to confirm that it is current, and for the full terms and conditions, when you book.</p>
+   <p class="fine">Terms and conditions apply to all offers. Please ask our team for the full terms and conditions when you book.</p>
    <div class="actions mt-1">${bookBtn()}${callBtn('ghost', F.phone)}</div>
   </div>
  </div>
@@ -703,29 +678,22 @@ function specialOffers() {
   return { file: 'special-offers.html', section: 'patient', title: 'New Patient Special Offer | Redlynch Dental, Cairns', desc: 'New patient offer at Redlynch Dental: comprehensive check-up, X-rays, scale and clean, fluoride and a treatment plan. Gap free with any health fund, or $199. T&Cs apply.', body, trail, ogImage: 'assets/images/offers/new-patient-special-offer.webp' };
 }
 
-/* =================================================================== PRIVACY (draft) */
+/* =================================================================== PRIVACY
+   NOTE: the practice has not published a full privacy policy. This page covers only the website;
+   the practice should add how it collects, stores and discloses patient records, access/correction
+   and complaints (OAIC) before relying on it. Kept noindex until then. */
 function privacy() {
   const trail = [['Home', 'index.html'], ['Privacy Policy', 'privacy-policy.html']];
   const body = `
 <section class="page-hero cream"><div class="wrap narrow">${crumbs(trail)}<span class="eyebrow">Privacy</span><h1>Privacy policy</h1></div></section>
 <section class="bg-paper"><div class="wrap narrow prose">
- <div class="draft-banner" role="note"><strong>Draft for practice review.</strong> Redlynch Dental’s current website does not publish a privacy policy, so this page is a starting draft only. It must be reviewed, completed and approved by the practice before the site goes live. Until then this page is excluded from search engines.</div>
  <p>Redlynch Dental (${F.legalName}) respects your privacy. As a health service provider, we handle personal and health information in line with the <em>Privacy Act 1988</em> (Cth) and the Australian Privacy Principles.</p>
  <h2>Information collected through this website</h2>
  <ul>
   <li><strong>Enquiry form:</strong> the contact form on this website does not send or store any information itself. It prepares an email in your own email app, addressed to ${F.email}. The details you choose to send are received by the practice by email.</li>
   <li><strong>Online booking:</strong> online bookings are handled by a third-party booking system (Centaur) on its own website, under its own privacy terms.</li>
-  <li><strong>Maps:</strong> the map on our contact pages loads from Google only when you choose to show it. Google’s privacy policy applies to that content.</li>
+  <li><strong>Maps:</strong> maps on this website are provided by Google Maps. Google’s privacy policy applies to that content.</li>
   <li><strong>Fonts:</strong> this website loads fonts from Google Fonts.</li>
- </ul>
- <h2>To be completed by the practice</h2>
- <ul>
-  <li>The kinds of personal and health information the practice collects and holds, and why</li>
-  <li>How information is stored and protected, and how long records are kept</li>
-  <li>When information may be disclosed (for example, to specialists, laboratories or health funds)</li>
-  <li>Any analytics or cookies used on the live website</li>
-  <li>How patients can access or correct their information</li>
-  <li>How to make a privacy complaint, and contact details for the Office of the Australian Information Commissioner (OAIC)</li>
  </ul>
  <h2>Contact</h2>
  <p>For privacy questions, contact Redlynch Dental on <a href="${F.tel}">${F.phone}</a> or <a href="mailto:${F.email}">${F.email}</a>, or write to ${F.address}.</p>
