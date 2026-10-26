@@ -1,0 +1,86 @@
+{
+  "_meta": {
+    "source": "https://www.redlynchdental.com.au/",
+    "researched": "2026-10-26",
+    "method": "Downloaded every internal page (HTTP 200); raw copies in research/source-snapshots/",
+    "status_key": {
+      "verified": "Stated on the official website",
+      "verified_with_caveat": "Stated on the official website, but may be out of date or needs practice confirmation",
+      "unverified": "Could not be confirmed"
+    }
+  },
+  "practice": {
+    "name": { "value": "Redlynch Dental", "status": "verified" },
+    "legal_name": { "value": "Chelsea Lane Dental Pty Ltd", "status": "verified", "source": "footer copyright, all pages" },
+    "phone": { "value": "(07) 4039 4720", "e164": "+61740394720", "status": "verified" },
+    "email": { "value": "reception@redlynchdental.com.au", "status": "verified" },
+    "address": { "street": "4/2 Chelsea Lane", "suburb": "Redlynch", "state": "QLD", "postcode": "4870", "status": "verified" },
+    "location_note": { "value": "Located within the Redlynch Commercial Hub", "status": "verified", "source": "homepage" },
+    "areas_served": { "value": ["Redlynch", "Brinsmead", "Edge Hill", "Smithfield", "surrounding suburbs of Cairns"], "status": "verified", "source": "homepage" },
+    "opening_hours": {
+      "value": { "Monday": "8am-5pm", "Tuesday": "8am-5pm", "Wednesday": "8am-5pm", "Thursday": "8am-5pm", "Friday": "8am-4:30pm", "Saturday": "Closed", "Sunday": "Closed" },
+      "status": "verified", "source": "footer, all pages"
+    },
+    "after_hours": { "value": "After hours and weekend appointments available at request", "status": "verified", "source": "homepage" },
+    "online_booking": { "value": "https://www.centaurportal.com/d4w/org-2836/search?practiceID=3243", "status": "verified", "note": "Centaur D4W portal; resolved HTTP 200 on 2026-10-26" },
+    "facebook": { "value": "https://www.facebook.com/Redlynch-Dental-102113211727578", "status": "unverified", "note": "Linked from the official site; Facebook refuses automated requests (HTTP 400), so not independently checked" },
+    "google_maps": { "short_link": "https://goo.gl/maps/pXrkYmtVfPAuVJ5H7", "embed_place": "Redlynch Dental", "status": "verified", "source": "contact page" },
+    "website_designer_old_site": { "value": "Havealook", "status": "verified" }
+  },
+  "team": [
+    { "name": "Dr Alex Bornsztejn", "role": "Principal Dentist", "qualifications": "BHSc(Dent), MDent", "university": "La Trobe University (degree); Masters completed in rural Victoria", "expertise": ["General dentistry", "Implant dentistry", "Wisdom teeth removal", "Crowns, veneers & smile makeovers"], "photo": "assets/images/team/dr-alex-bornsztejn.webp", "status": "verified", "ahpra_checked": false },
+    { "name": "Dr Nadia Mullins", "role": "Dentist", "qualifications": "BDS", "university": "James Cook University, Cairns (graduated 2018)", "interest": "Cosmetic dentistry", "photo": "assets/images/team/dr-nadia-mullins.webp", "status": "verified", "ahpra_checked": false },
+    { "name": "Dr Julian Fung", "role": "Dentist", "qualifications": "BDS", "university": "James Cook University, Cairns", "interest": "Working with children; easing dental fears", "photo": "assets/images/team/dr-julian-fung.webp", "status": "verified", "ahpra_checked": false },
+    { "name": "Erin", "role": "Practice Manager", "qualifications": "Certificate III in Dental Assisting", "photo": "assets/images/team/erin-practice-manager.webp", "status": "verified" },
+    { "name": "Ella", "role": "Dental Assistant", "qualifications": null, "photo": "assets/images/team/ella-dental-assistant.webp", "status": "verified", "note": "No qualification published" }
+  ],
+  "services": [
+    { "name": "Check-ups and dental cleans", "official_url": "https://www.redlynchdental.com.au/check-ups-and-dental-cleans", "file": "check-ups-and-dental-cleans.html" },
+    { "name": "Children's dentistry", "official_url": "https://www.redlynchdental.com.au/childrens-dentistry", "file": "childrens-dentistry.html" },
+    { "name": "Cosmetic veneers", "official_url": "https://www.redlynchdental.com.au/cosmetic-veneers", "file": "cosmetic-veneers.html" },
+    { "name": "Crowns and bridge work", "official_url": "https://www.redlynchdental.com.au/crowns-and-bridge-work", "file": "crowns-and-bridges.html" },
+    { "name": "Dental implants", "official_url": "https://www.redlynchdental.com.au/dental-implants", "file": "dental-implants.html" },
+    { "name": "Dentures", "official_url": "https://www.redlynchdental.com.au/dentures", "file": "dentures.html" },
+    { "name": "Emergency dental care", "official_url": "https://www.redlynchdental.com.au/emergency-dental-care", "file": "emergency-dental-care.html" },
+    { "name": "Extractions", "official_url": "https://www.redlynchdental.com.au/extractions", "file": "extractions.html" },
+    { "name": "Facial injectables and skin treatments", "official_url": "https://www.redlynchdental.com.au/facial-injectables-and-skin-treatments", "file": "facial-injectables-and-skin-treatments.html", "note": "Listed on /services but not in the old site's menu" },
+    { "name": "Fillings", "official_url": "https://www.redlynchdental.com.au/fillings", "file": "fillings.html" },
+    { "name": "Invisalign", "official_url": "https://www.redlynchdental.com.au/invisalign", "file": "invisalign.html" },
+    { "name": "Mouthguards", "official_url": "https://www.redlynchdental.com.au/mouthguards", "file": "mouthguards.html" },
+    { "name": "Root canal therapy", "official_url": "https://www.redlynchdental.com.au/root-canal-therapy", "file": "root-canal-therapy.html" },
+    { "name": "Whitening", "official_url": "https://www.redlynchdental.com.au/whitening", "file": "teeth-whitening.html" },
+    { "name": "Wisdom teeth", "official_url": "https://www.redlynchdental.com.au/wisdom-teeth", "file": "wisdom-teeth.html" }
+  ],
+  "emergency": {
+    "reserved_daily": { "value": "Specific appointments reserved daily for dental emergencies", "status": "verified" },
+    "conditions": { "value": ["Painful tooth or gums", "Broken teeth & fillings", "Facial swelling", "Trauma to your face, teeth and/or gums", "Broken or lost denture"], "status": "verified" },
+    "instruction": { "value": "Call us immediately; we will always strive to make time for you to be seen ASAP", "status": "verified" },
+    "not_claimed": ["24/7 service", "guaranteed same-day treatment", "after-hours emergency service"]
+  },
+  "offers_and_pricing": {
+    "new_patient_offer": {
+      "includes": ["Comprehensive dental check-up", "All necessary X-rays (inc full face X-rays)", "Scale, clean & polish", "Fluoride treatment", "Treatment plan"],
+      "health_fund": "Gap free with any health fund",
+      "no_health_fund_price": "$199",
+      "terms": "T&Cs apply (full terms not published)",
+      "source": "https://www.redlynchdental.com.au/thumbnaillarge/SP-2.jpg via /special-offers",
+      "status": "verified_with_caveat",
+      "note": "No date or expiry published; confirm it is current"
+    },
+    "wisdom_tooth_removal": { "value": "$200-$400 per tooth under local anaesthetic in the chair", "source": "/wisdom-teeth FAQ", "status": "verified_with_caveat", "note": "Page appears to date from ~2021; confirm current pricing" },
+    "implant_consultation": { "value": "Complimentary", "source": "/dental-implants", "status": "verified_with_caveat" },
+    "free_kids_dentistry": { "value": "Listed on homepage", "status": "verified_with_caveat", "note": "No eligibility details published; CDBS participation NOT confirmed and NOT claimed" },
+    "payment_plans": { "value": "Payment plans available", "status": "verified", "note": "No provider named" },
+    "health_funds": { "value": null, "status": "unverified", "note": "No preferred-provider, HICAPS or fund list published; none claimed" }
+  },
+  "brand": {
+    "logo": "assets/images/branding/redlynch-dental-logo-original.png (from /files/logo.png, 900x215, black background)",
+    "logo_green_sampled": "#BCD531",
+    "old_site_fonts": ["Open Sans", "Raleway"],
+    "new_site_fonts": ["Fraunces (display)", "Manrope (body)"]
+  },
+  "blog": [
+    { "title": "Why Choose Dental Implants?", "author": "Alex Bornsztejn", "date": "2021-01-29", "official_url": "https://www.redlynchdental.com.au/blog/why-choose-dental-implants", "file": "blog-why-choose-dental-implants.html", "note": "Original CTA named South Cairns Dental (Edmonton, 4055 4214); replaced with Redlynch contact details and disclosed in an editor's note" }
+  ],
+  "not_found_on_official_site": ["/faq (404)", "/new-patients (404)", "/privacy-policy (404)", "About Us page content (page exists but is empty)", "Practice interior or exterior photographs"]
+}

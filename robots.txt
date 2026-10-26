@@ -1,0 +1,3 @@
+# STAGING BUILD: blocks all crawlers. Rebuild with "node _build/build.js --production" before launch.
+User-agent: *
+Disallow: /
