@@ -191,8 +191,8 @@ function home() {
   <div class="c-cards" data-reveal-group>
    <div class="c-card"><span class="ic">${ico('pin')}</span><div><h3>Address</h3><p><a href="${F.mapsLink}" target="_blank" rel="noopener">${F.street}<br>${F.suburb} ${F.state} ${F.postcode}<span class="sr-only"> (opens Google Maps in a new tab)</span></a></p></div></div>
    <div class="c-card"><span class="ic">${ico('phone')}</span><div><h3>Phone</h3><p><a href="${F.tel}">${F.phone}</a></p></div></div>
-   <div class="c-card"><span class="ic">${ico('mail')}</span><div><h3>Email</h3><p><a href="mailto:${F.email}">${F.email}</a></p></div></div>
-   <div class="c-card"><span class="ic">${ico('clock')}</span><div style="flex:1"><h3>Opening hours</h3>${hoursRows()}</div></div>
+   <div class="c-card"><span class="ic">${ico('mail')}</span><div><h3>Email</h3><p><a href="mailto:${F.email}">${F.email.replace('@', '@<wbr>')}</a></p></div></div>
+   <div class="c-card c-hours"><span class="ic">${ico('clock')}</span><div style="flex:1"><h3>Opening hours</h3>${hoursRows()}</div></div>
   </div>
   <div data-reveal>${mapBox()}</div>
  </div>

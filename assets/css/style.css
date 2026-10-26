@@ -600,6 +600,22 @@ table.hours tr.today th::after{content:" · today";font-weight:600;font-size:.82
 .map.is-loading .map-reload svg{animation:spin .8s linear infinite}
 /* beside contact cards on desktop, the map fills the column height */
 @media (min-width:1021px){.page-index .contact-grid{align-items:stretch}.page-index .contact-grid>div:last-child{display:flex}.page-index .contact-grid .map{flex:1;display:flex;flex-direction:column}.page-index .contact-grid .map-frame{flex:1;aspect-ratio:auto;min-height:380px}}
+/* homepage contact cards on phones: keep them inside the screen; the opening-hours table gets the card's full width */
+@media (max-width:560px){
+  .page-index .c-cards{grid-template-columns:minmax(0,1fr)}
+  .page-index .c-card>div{min-width:0;overflow-wrap:anywhere}
+  .page-index .c-hours{display:grid;grid-template-columns:auto 1fr;column-gap:14px;align-items:center;padding:18px}
+  .page-index .c-hours>div{display:contents}
+  .page-index .c-hours h3{margin:0}
+  .page-index .c-hours table.hours{grid-column:1/-1;margin-top:8px;font-size:.94rem}
+  .page-index .c-hours table.hours th,.page-index .c-hours table.hours td{padding:11px 0}
+  .page-index .c-hours table.hours td{padding-left:12px;white-space:nowrap}
+}
+@media (max-width:360px){
+  .page-index .c-hours{padding:16px}
+  .page-index .c-hours table.hours{font-size:.88rem}
+  .page-index .c-hours table.hours td{padding-left:8px}
+}
 
 /* form */
 .form{background:var(--paper);border-radius:var(--r-lg);padding:clamp(24px,4vw,40px);box-shadow:var(--shadow-sm)}
