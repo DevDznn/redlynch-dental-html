@@ -1,0 +1,7 @@
+/* Block editor (posts and plain pages): the site's type and colours. */
+body{font-family:'Manrope',system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;font-size:17px;line-height:1.7;color:#26302B;background:#fff}
+h1,h2,h3,h4{font-family:'Fraunces',Georgia,'Times New Roman',serif;font-weight:500;line-height:1.12;color:#111915;letter-spacing:-.01em}
+h3{font-weight:600}
+a{color:#566F12}
+.risk{font-size:.9rem;color:#56615A;font-style:italic}
+.lead{font-size:1.15rem;color:#56615A}

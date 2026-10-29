@@ -1,0 +1,80 @@
+/* =========================================================================
+   Redlynch Dental (WordPress): loaded AFTER site.css (the static site's stylesheet, unchanged).
+   Only what WordPress and Elementor need on top of it: the few places where Elementor's widget
+   wrappers sit between the site's layout and its content, WordPress's admin bar, and helpers.
+   ========================================================================= */
+
+/* ---------- Elementor containers ---------- */
+/* Elementor sets flex-direction:column on flex containers; the section-heading row is a row. */
+.e-con.rd.sec-head.row{flex-direction:row}
+/* Elementor positions a container's ::before as a background overlay (left:0); the hero's
+   decorative circle is placed from the right. */
+.e-con.rd.hero-home::before{left:auto}
+
+/* ---------- Links inside Elementor content ----------
+   Elementor removes underlines from every link in its content (.elementor a). Restore the
+   site's underlined text links in running text; buttons, cards and menus keep their own styles. */
+.elementor :is(p,li,dd,td,th,label,figcaption) a:not([class]):not(nav a):not(.team-jump a){text-decoration-line:underline}
+
+/* ---------- Native Elementor widgets used by the imported pages ---------- */
+/* Small headings ("eyebrows") are paragraphs with the class "eyebrow" in Text Editor widgets.
+   Keep the eyebrow's own size, colour and spacing where the site styles paragraphs
+   (e.g. ".sec-head p" is larger and grey). */
+.elementor .elementor-widget-text-editor p.eyebrow{font-size:.78rem;line-height:inherit;margin:0 0 14px;color:var(--moss)}
+.elementor :is(.bg-ink,.bg-forest,.hero-dark) .elementor-widget-text-editor p.eyebrow{color:var(--lime)}
+/* Homepage hero photo (an Image widget) with the visit card overlapping it. */
+.hero-media .elementor-widget-image img{display:block;width:100%;aspect-ratio:3/2;object-fit:cover;object-position:50% 30%;border-radius:var(--r-lg);box-shadow:var(--shadow);background:var(--sand)}
+.hero-media>.elementor-widget-rd-visit-card{position:static}
+/* Framed photos (Image widget with the classes "media-frame ratio-4-3"). */
+.media-frame img{display:block}
+.media-frame .elementor-widget-container{height:100%}
+/* Focus point of a framed photo: add one of these classes next to "media-frame". */
+.rd-focus-64-30 img{object-position:64% 30%}
+.rd-focus-62-50 img{object-position:62% 50%}
+.rd-focus-50-20 img{object-position:50% 20%}
+.rd-focus-50-50 img{object-position:50% 50%}
+/* Headings in an article column: every Heading widget is the first child of its own wrapper,
+   so the site's "first heading has no top margin" rule must look at the wrapper instead. */
+.prose .elementor-widget-heading h2{margin-top:1.6em}
+.prose>.elementor-widget-heading:first-child h2{margin-top:0}
+
+/* ---------- Redlynch widgets inside grid layouts ---------- */
+/* The booking sidebar stays in view beside a service article (sticky on its grid cell). */
+.layout>.elementor-widget-rd-service-sidebar{position:sticky;top:calc(var(--hdr-h) + 24px);align-self:start}
+.layout>.elementor-widget-rd-service-sidebar .side{position:static}
+@media (max-width:1020px){.layout>.elementor-widget-rd-service-sidebar{position:static}}
+
+/* ---------- Scroll reveals on Elementor containers ----------
+   Elementor free can't add data attributes to containers, so the classes rd-reveal and
+   rd-reveal-group stand in for data-reveal and data-reveal-group (main.js converts them).
+   Hidden from the first paint, like the static site, only when JavaScript runs. */
+.js .rd-reveal:not(.in),.js .rd-reveal-group>:not(.in){opacity:0;transform:translateY(26px)}
+@media (prefers-reduced-motion:reduce){.js .rd-reveal:not(.in),.js .rd-reveal-group>:not(.in){opacity:1;transform:none}}
+@media print{.js .rd-reveal,.js .rd-reveal-group>*{opacity:1!important;transform:none!important}}
+
+/* ---------- WordPress ---------- */
+/* Logged-in admin bar: keep the sticky header and the mobile drawer below it. */
+@media (min-width:783px){.admin-bar header.site{top:32px}}
+@media (max-width:782px) and (min-width:601px){.admin-bar header.site{top:46px}}
+/* Logo from Customize › Site Identity. */
+.logo img.custom-logo,.logo .custom-logo{height:auto}
+/* Core alignment and caption classes in posts and plain pages. */
+.prose .alignleft{float:left;margin:.3em 1.5em 1em 0}
+.prose .alignright{float:right;margin:.3em 0 1em 1.5em}
+.prose .aligncenter{margin-left:auto;margin-right:auto}
+.prose .wp-caption-text,.prose .wp-element-caption{font-size:.86rem;color:var(--muted);margin-top:10px}
+.screen-reader-text{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.screen-reader-text:focus{clip:auto;width:auto;height:auto;margin:0;z-index:200;background:var(--lime);color:var(--ink);padding:10px 16px;border-radius:10px}
+/* Post lists and pagination (archives, search). */
+.guide-grid+.pagination,.navigation.pagination{margin-top:32px}
+.nav-links{display:flex;flex-wrap:wrap;gap:8px}
+.nav-links .page-numbers{display:inline-flex;min-width:44px;min-height:44px;align-items:center;justify-content:center;padding:0 14px;border-radius:999px;background:var(--paper);border:1px solid var(--line);text-decoration:none;font-weight:700;color:var(--ink)}
+.nav-links .page-numbers.current{background:var(--lime);border-color:var(--lime)}
+.search-form{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.search-form .search-field{font:inherit;padding:12px 14px;border:1.5px solid var(--line);border-radius:12px;background:var(--paper);min-width:240px}
+.search-form .search-submit{font:800 .96rem/1.1 var(--f-body);padding:12px 22px;border-radius:999px;border:0;background:var(--lime);color:var(--ink);cursor:pointer}
+/* Comments (off on the imported content; styled in case they are turned on). */
+.comment-list{list-style:none;padding:0}
+.comment-body{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:20px;margin-bottom:16px}
+.comment-form input:not([type=submit]):not([type=checkbox]),.comment-form textarea{width:100%;font:inherit;padding:12px 14px;border:1.5px solid var(--line);border-radius:12px;background:var(--cream)}
+.comment-form .submit{font:800 .96rem/1.1 var(--f-body);padding:12px 22px;border-radius:999px;border:0;background:var(--lime);color:var(--ink);cursor:pointer}
