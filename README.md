@@ -11,7 +11,7 @@ A complete static HTML/CSS/JavaScript website for **Redlynch Dental**, 4/2 Chels
 
 ---
 
-## 1. Pages (27)
+## 1. Pages (28)
 
 | File | Page |
 |---|---|
@@ -30,16 +30,17 @@ A complete static HTML/CSS/JavaScript website for **Redlynch Dental**, 4/2 Chels
 | `extractions.html` | Extractions |
 | `facial-injectables-and-skin-treatments.html` | Facial Injectables and Skin Treatments |
 | `fillings.html` | Fillings |
-| `invisalign.html` | Invisalign® |
+| `invisalign.html` | Clear Aligners (the address is unchanged) |
 | `mouthguards.html` | Mouthguards |
 | `root-canal-therapy.html` | Root Canal Therapy |
 | `teeth-whitening.html` | Teeth Whitening |
 | `wisdom-teeth.html` | Wisdom Teeth |
 | `faq.html` | FAQs (7 categories, accordions, sticky category index) |
 | `blog.html` | Blog listing (the one genuine article + treatment guides) |
-| `blog-why-choose-dental-implants.html` | Blog article (original post by Dr Alex Bornsztejn, 29 Jan 2021) |
+| `blog-why-choose-dental-implants.html` | Blog article (original post, 29 Jan 2021; byline "Redlynch Dental") |
 | `contact.html` | Contact, hours, enquiry form, map |
-| `special-offers.html` | New patient offer (from the official Special Offers page) |
+| `special-offers.html` | New patient offer (prices confirmed by the practice, 29 Oct 2026) |
+| `payments-and-fees.html` | Payments and Fees: new patient offer, how treatment costs work, payment providers, CDBS bulk billing |
 | `privacy-policy.html` | Website-only privacy notice; the practice should add its full patient-records policy; `noindex` |
 | `404.html` | Not found; `noindex` |
 
@@ -86,7 +87,7 @@ Google Fonts (Fraunces, Manrope) need an internet connection. Offline, the site 
 
 ## 4. Editing content
 
-**Option A: edit the generator (recommended).** Header, navigation and footer are shared across 27 pages, so edit the source and rebuild:
+**Option A: edit the generator (recommended).** Header, navigation and footer are shared across 28 pages, so edit the source and rebuild (the build also refreshes the header, footer and practice JSON-LD of the two hand-written landing pages):
 
 1. Practice facts (phone, hours, address, booking link) are in `_build/lib.js` → `F`. If hours change, also update `assets/js/practice-data.js`, which drives the "Open now" indicator.
 2. Service content is in `_build/services.js`.

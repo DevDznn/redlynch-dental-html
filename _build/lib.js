@@ -4,7 +4,8 @@
 
 const SITE_URL = 'https://www.redlynchdental.com.au/';
 
-/* Verified from https://www.redlynchdental.com.au/ on 26 Oct 2026 (see research/practice-facts.json). */
+/* Verified from https://www.redlynchdental.com.au/ on 26 Oct 2026 (see research/practice-facts.json).
+   Opening hours, team and payment details confirmed by the practice on 29 Oct 2026. */
 const F = {
   name: 'Redlynch Dental',
   legalName: 'Chelsea Lane Dental Pty Ltd',
@@ -21,17 +22,33 @@ const F = {
   mapsLink: 'https://www.google.com/maps/search/?api=1&query=Redlynch+Dental+4%2F2+Chelsea+Lane+Redlynch+QLD+4870',
   mapEmbed: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d7635.351081263452!2d145.69347367458835!3d-16.891937453509275!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6978656ebcfc004d%3A0x465a2fade70d802a!2sRedlynch%20Dental!5e0!3m2!1sen!2sau!4v1611892217850!5m2!1sen!2sau',
   hours: [
-    ['Monday', 1, '8:00am – 5:00pm', '08:00', '17:00'],
-    ['Tuesday', 2, '8:00am – 5:00pm', '08:00', '17:00'],
-    ['Wednesday', 3, '8:00am – 5:00pm', '08:00', '17:00'],
-    ['Thursday', 4, '8:00am – 5:00pm', '08:00', '17:00'],
+    ['Monday', 1, '8:00am – 5:30pm', '08:00', '17:30'],
+    ['Tuesday', 2, '8:00am – 5:30pm', '08:00', '17:30'],
+    ['Wednesday', 3, '8:00am – 6:30pm', '08:00', '18:30'],
+    ['Thursday', 4, '8:00am – 6:30pm', '08:00', '18:30'],
     ['Friday', 5, '8:00am – 4:30pm', '08:00', '16:30'],
     ['Saturday', 6, 'Closed'],
     ['Sunday', 0, 'Closed'],
   ],
   suburbs: ['Redlynch', 'Brinsmead', 'Edge Hill', 'Smithfield', 'Surrounding Cairns suburbs'],
+  payProviders: ['Afterpay', 'Zip', 'Fund My Dental', 'Denticare'],
 };
 F.address = `${F.street}, ${F.suburb} ${F.state} ${F.postcode}`;
+F.payList = 'Afterpay, Zip, Fund My Dental and Denticare';
+
+/* Consecutive days with the same hours, for the compact tables ("Mon – Tue", "Friday", "Sat – Sun")
+   and the one-line summary. Grouped as the WordPress theme groups them (inc/practice.php). */
+const HOURS_GROUPS = F.hours.reduce((g, [day, , t]) => {
+  const short = t.replace(/:00/g, '');
+  const last = g[g.length - 1];
+  if (last && last.short === short) last.days.push(day);
+  else g.push({ days: [day], short, open: t !== 'Closed' });
+  return g;
+}, []).map(g => ({ ...g, label: g.days.length === 1 ? g.days[0] : `${g.days[0].slice(0, 3)} – ${g.days[g.days.length - 1].slice(0, 3)}`, compact: g.days.length === 1 ? g.days[0].slice(0, 3) : `${g.days[0].slice(0, 3)}–${g.days[g.days.length - 1].slice(0, 3)}` }));
+const HOURS_SUMMARY = HOURS_GROUPS.filter(g => g.open).map(g => `${g.compact} ${g.short.replace(' – ', '–')}`).join(' · ');
+
+/* Default social sharing and JSON-LD image (no former staff in it). */
+const DEFAULT_IMG = 'assets/images/hero/smiling-mother-and-daughter.webp';
 
 const RISK = 'Any surgical or invasive procedure carries risks. Before proceeding, you should seek a second opinion from an appropriately qualified health practitioner.';
 
@@ -103,13 +120,17 @@ const crumbs = trail => `<nav class="crumbs" aria-label="Breadcrumb">${trail.map
 function hoursRows(cls = 'hours') {
   return `<table class="${cls}"><caption class="sr-only">Opening hours</caption><tbody>${F.hours.map(([d, n, t]) => `<tr data-day="${n}"><th scope="row">${d}</th><td>${t}</td></tr>`).join('')}</tbody></table>`;
 }
-const hoursMini = (cls = 'hours-mini') => `<table class="${cls}"><tbody><tr><td>Mon – Thu</td><td>8am – 5pm</td></tr><tr><td>Friday</td><td>8am – 4:30pm</td></tr><tr><td>Sat – Sun</td><td>Closed</td></tr></tbody></table>`;
+const hoursMini = (cls = 'hours-mini') => `<table${cls ? ` class="${cls}"` : ''}><tbody>${HOURS_GROUPS.map(g => `<tr><td>${g.label}</td><td>${g.short}</td></tr>`).join('')}</tbody></table>`;
+
+/* A team member's photo, or their initials until a photo is supplied. */
+const initials = name => name.replace(/^Dr\s+/, '').split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase();
+const photo = (m, alt, attrs = '') => m.img ? `<img src="${m.img}" alt="${alt}"${attrs}>` : `<span class="initials" aria-hidden="true">${initials(m.name)}</span>`;
 
 /* Shared sidebar for service pages */
 function sideBar(opts = {}) {
   return `<aside class="side" aria-label="Book and contact">
  <div class="side-box${opts.em ? ' em' : ''}"><h3>${opts.em ? 'Call us now' : 'Book an appointment'}</h3><p>${opts.em ? 'Appointments are reserved every day for dental emergencies.' : 'Call our Redlynch team, or book online at a time that suits you.'}</p>${callBtn(opts.em ? 'white' : '', F.phone)}${opts.em ? '' : bookBtn('ghost-light')}</div>
- <div class="side-box light"><h3>Opening hours</h3>${hoursMini()}<p class="fine" style="margin-top:12px">After-hours and weekend appointments are available at request.</p></div>
+ <div class="side-box light"><h3>Opening hours</h3>${hoursMini()}</div>
  <div class="side-box light"><h3>Find us</h3><p style="margin-bottom:8px">${F.street}<br>${F.suburb} ${F.state} ${F.postcode}</p><a class="text-link" href="contact.html">Map and directions ${ico('arrow')}</a></div>
 </aside>`;
 }
@@ -124,7 +145,7 @@ function navHtml(page) {
   const sec = page.section;
   const a = (href, label, extra = '') => `<a href="${href}"${href === cur ? ' aria-current="page"' : ''}${extra}>${label}</a>`;
   const li = (key, inner, dd = false) => `<li class="${dd ? 'has-dd' : ''}${dd && key === 'services' ? ' has-mega' : ''}${sec === key ? ' is-active' : ''}">${inner}</li>`.replace('class=""', '');
-  const ddBtn = (id, label) => `<button class="dd-btn" type="button" aria-expanded="false" aria-controls="${id}">${label}${ico('chev')}</button>`;
+  const ddBtn = (id, label) => `<button class="dd-btn" type="button" aria-expanded="false" aria-controls="${id}"${id === 'dd-services' ? ' style="position:relative"' : ''}>${label}${ico('chev')}</button>`;
   const svcLinks = SERVICES.map(s => `<li><a href="${s.file}"${s.file === cur ? ' aria-current="page"' : ''}${s.slug === 'emergency-dental-care' ? ' class="is-em"' : ''}>${ico(s.icon)}<span>${s.navName}</span></a></li>`).join('');
   return `<nav class="main" id="site-nav" aria-label="Main">
  <div class="nav-mobile-extra">
@@ -137,6 +158,7 @@ function navHtml(page) {
   ${li('about', `${ddBtn('dd-about', 'About Us')}<ul class="dd" id="dd-about"><li>${a('about.html', 'About Redlynch Dental')}</li><li>${a('our-team.html', 'Meet Our Team')}</li><li>${a('new-patients.html', 'New Patients')}</li></ul>`, true)}
   ${li('services', `${ddBtn('dd-services', 'Services')}<div class="mega" id="dd-services"><div><div class="mega-head"><strong>Our services</strong>${a('services.html', 'View all services →')}</div><ul class="mega-cols"><li class="mobile-only">${a('services.html', `${ico('search')}<span>All services</span>`)}</li>${svcLinks}</ul></div><div class="mega-feature"><span class="em-tag" style="background:rgba(0,0,0,.18);margin:0;align-self:flex-start">${ico('alert')} Emergency</span><strong>In pain right now?</strong><p>We reserve appointments every day for dental emergencies. Call us straight away.</p><a class="btn white sm" href="${F.tel}">${ico('phone')} ${F.phone}</a><a href="emergency-dental-care.html" style="color:#fff;font-weight:700;font-size:.9rem">Emergency dental care →</a></div></div>`, true)}
   ${li('patient', `${ddBtn('dd-patient', 'Patient Info')}<ul class="dd" id="dd-patient"><li>${a('faq.html', 'Frequently Asked Questions')}</li><li>${a('special-offers.html', 'New Patient Offer')}</li><li>${a('emergency-dental-care.html', 'Emergency Dental Care')}</li><li><a href="${F.booking}" target="_blank" rel="noopener">Book Online ↗<span class="sr-only"> (opens in a new tab)</span></a></li></ul>`, true)}
+  ${li('payments', a('payments-and-fees.html', 'Payments &amp; Fees'))}
   ${li('blog', a('blog.html', 'Blog'))}
   ${li('contact', a('contact.html', 'Contact Us'))}
  </ul>
@@ -148,7 +170,7 @@ function layout(page, opts) {
   const prod = opts.production;
   const url = SITE_URL + (page.file === 'index.html' ? '' : page.file);
   const robots = page.noindex || !prod ? 'noindex,nofollow' : 'index,follow,max-image-preview:large';
-  const ogImg = SITE_URL + (page.ogImage || 'assets/images/team/redlynch-dental-team-group.webp');
+  const ogImg = SITE_URL + (page.ogImage || DEFAULT_IMG);
   const ld = [dentistLd(), ...(page.ld || [])];
   if (page.trail) ld.push(crumbsLd(page.trail));
   const title = page.title;
@@ -187,7 +209,7 @@ ${ld.map(o => `<script type="application/ld+json">${JSON.stringify(o)}</script>`
 <div class="topline"><div class="wrap">
  <div class="tl-l">
   <span class="tl-item tl-addr">${ico('pin')}<a href="${F.mapsLink}" target="_blank" rel="noopener">${F.address}</a></span>
-  <span class="tl-item tl-hours status" data-status><i></i><span>Mon–Thu 8am–5pm · Fri 8am–4:30pm</span></span>
+  <span class="tl-item tl-hours status" data-status><i></i><span>${HOURS_SUMMARY}</span></span>
  </div>
  <div class="tl-r">
   <a class="tl-item tl-em" href="emergency-dental-care.html">${ico('alert')} Dental emergency? Call ${F.phone}</a>
@@ -239,6 +261,7 @@ function footer() {
    <li><a href="our-team.html">Meet Our Team</a></li>
    <li><a href="new-patients.html">New Patients</a></li>
    <li><a href="special-offers.html">New Patient Offer</a></li>
+   <li><a href="payments-and-fees.html">Payments and Fees</a></li>
    <li><a href="faq.html">FAQs</a></li>
    <li><a href="blog.html">Blog</a></li>
    <li><a href="contact.html">Contact Us</a></li>
@@ -246,7 +269,7 @@ function footer() {
   </ul></div>
   <div><h2>Visit us</h2>
    <p><a href="${F.mapsLink}" target="_blank" rel="noopener">${F.street}<br>${F.suburb} ${F.state} ${F.postcode}</a><br><span style="font-size:.86rem">Within the Redlynch Commercial Hub</span></p>
-   <table><tbody><tr><td>Mon – Thu</td><td>8am – 5pm</td></tr><tr><td>Friday</td><td>8am – 4:30pm</td></tr><tr><td>Sat – Sun</td><td>Closed</td></tr></tbody></table>
+   ${hoursMini('')}
    <p style="margin-top:14px"><a href="${F.facebook}" target="_blank" rel="noopener">Redlynch Dental on Facebook ↗<span class="sr-only"> (opens in a new tab)</span></a></p>
   </div>
  </div>
@@ -262,22 +285,19 @@ function dentistLd() {
     '@context': 'https://schema.org', '@type': 'Dentist', '@id': SITE_URL + '#dentist',
     name: F.name, legalName: F.legalName, url: SITE_URL,
     logo: SITE_URL + 'assets/images/branding/redlynch-dental-logo-original.png',
-    image: SITE_URL + 'assets/images/team/redlynch-dental-team-group.webp',
+    image: SITE_URL + DEFAULT_IMG,
     telephone: F.telIntl, email: F.email,
     address: { '@type': 'PostalAddress', streetAddress: F.street, addressLocality: F.suburb, addressRegion: F.state, postalCode: F.postcode, addressCountry: 'AU' },
     areaServed: ['Redlynch', 'Brinsmead', 'Edge Hill', 'Smithfield', 'Cairns'],
     hasMap: F.mapsLink,
     sameAs: [F.facebook],
-    openingHoursSpecification: [
-      { '@type': 'OpeningHoursSpecification', dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday'], opens: '08:00', closes: '17:00' },
-      { '@type': 'OpeningHoursSpecification', dayOfWeek: 'Friday', opens: '08:00', closes: '16:30' },
-    ],
+    openingHoursSpecification: F.hours.filter(h => h[3]).map(([day, , , opens, closes]) => ({ '@type': 'OpeningHoursSpecification', dayOfWeek: day, opens, closes })),
     employee: [
-      { '@type': 'Person', name: 'Dr Alex Bornsztejn', jobTitle: 'Principal Dentist' },
-      { '@type': 'Person', name: 'Dr Nadia Mullins', jobTitle: 'Dentist' },
-      { '@type': 'Person', name: 'Dr Julian Fung', jobTitle: 'Dentist' },
+      { '@type': 'Person', name: 'Dr Max Ryu', jobTitle: 'Principal Dentist' },
+      { '@type': 'Person', name: 'Dr Nadia Mullins', jobTitle: 'Associate Dentist' },
+      { '@type': 'Person', name: 'Dr Louis Fernandez', jobTitle: 'Associate Dentist' },
     ],
   };
 }
 
-module.exports = { SITE_URL, F, RISK, ico, esc, strip, ARROW, callBtn, bookBtn, faqList, faqLd, crumbs, crumbsLd, hoursRows, hoursMini, sideBar, layout, setServices, SERVICES: () => SERVICES };
+module.exports = { SITE_URL, F, RISK, HOURS_GROUPS, HOURS_SUMMARY, ico, esc, strip, ARROW, callBtn, bookBtn, faqList, faqLd, crumbs, crumbsLd, hoursRows, hoursMini, initials, photo, sideBar, layout, setServices, SERVICES: () => SERVICES };

@@ -49,7 +49,22 @@ class Icon_Cards extends Base {
 					'features'  => __( 'Icon feature list (two columns)', 'redlynch-dental' ),
 					'emergency' => __( 'Emergency cards with "Right now" advice', 'redlynch-dental' ),
 					'when'      => __( 'Two checklist panels (green / red)', 'redlynch-dental' ),
+					'lp'        => __( 'Landing page cards (icon beside the text)', 'redlynch-dental' ),
 				),
+			)
+		);
+		$this->add_control(
+			'lp_grid',
+			array(
+				'label'     => __( 'Grid', 'redlynch-dental' ),
+				'type'      => Controls_Manager::SELECT,
+				'default'   => '',
+				'options'   => array(
+					''                    => __( 'Four columns', 'redlynch-dental' ),
+					'c3'                  => __( 'Three columns', 'redlynch-dental' ),
+					'lp-options on-cream' => __( 'Three, then two (white cards)', 'redlynch-dental' ),
+				),
+				'condition' => array( 'layout' => 'lp' ),
 			)
 		);
 		$this->add_control(
@@ -170,6 +185,15 @@ class Icon_Cards extends Base {
 				$out .= '<div><span>' . rd_icon( $i['icon'] ? $i['icon'] : 'check' ) . '</span><div><h3>' . esc_html( $i['title'] ) . '</h3>' . $this->rich( $i['text'] ) . '</div></div>';
 			}
 			$this->out( '<div class="comfort" data-reveal-group>' . $out . '</div>' );
+			return;
+		}
+
+		if ( 'lp' === $layout ) {
+			foreach ( $items as $i ) {
+				$out .= '<li>' . ( $i['icon'] ? '<span class="ic">' . rd_icon( $i['icon'] ) . '</span>' : '' ) . '<div><h3>' . esc_html( $i['title'] ) . '</h3>' . $this->rich( $i['text'] ) . '</div></li>';
+			}
+			$grid = in_array( $s['lp_grid'] ?? '', array( 'c3', 'lp-options on-cream' ), true ) ? ' ' . $s['lp_grid'] : '';
+			$this->out( '<ul class="lp-cards' . $grid . '" data-reveal-group>' . $out . '</ul>' );
 			return;
 		}
 

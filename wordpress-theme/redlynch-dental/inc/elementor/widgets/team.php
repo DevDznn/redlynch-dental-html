@@ -94,7 +94,7 @@ class Team extends Base {
 	 */
 	private function photo( $m, $alt, $attrs = array(), $size = 'rd-portrait' ) {
 		if ( ! $m['img'] ) {
-			return '';
+			return rd_initials_html( $m['name'] );
 		}
 		return wp_get_attachment_image(
 			$m['img'],

@@ -54,7 +54,7 @@ function rd_team_fields() {
 		'_rd_quals_long'    => __( 'Qualifications, in full (profile page)', 'redlynch-dental' ),
 		'_rd_focus_heading' => __( 'List heading (e.g. Areas of expertise)', 'redlynch-dental' ),
 		'_rd_focus'         => __( 'List items, one per line', 'redlynch-dental' ),
-		'_rd_anchor'        => __( 'Link anchor on the team page (e.g. dr-alex-bornsztejn)', 'redlynch-dental' ),
+		'_rd_anchor'        => __( 'Link anchor on the team page (e.g. dr-max-ryu)', 'redlynch-dental' ),
 	);
 }
 
@@ -100,6 +100,31 @@ function rd_get_team( $group = 'dentist' ) {
 }
 
 /**
+ * A team member's initials, shown in place of the photo until one is set ("Dr Max Ryu" → "MR").
+ *
+ * @param string $name Name.
+ * @return string
+ */
+function rd_initials( $name ) {
+	$words = preg_split( '/\s+/', trim( preg_replace( '/^Dr\s+/', '', (string) $name ) ) );
+	$out   = '';
+	foreach ( $words as $w ) {
+		$out .= mb_substr( $w, 0, 1 );
+	}
+	return mb_strtoupper( mb_substr( $out, 0, 2 ) );
+}
+
+/**
+ * The initials placeholder for a team member without a photo.
+ *
+ * @param string $name Name.
+ * @return string
+ */
+function rd_initials_html( $name ) {
+	return '<span class="initials" aria-hidden="true">' . esc_html( rd_initials( $name ) ) . '</span>';
+}
+
+/**
  * Jump links to the profiles on the team page (small round photos), plus the support team.
  *
  * @param string $support_label Text of the support team link.
@@ -120,7 +145,7 @@ function rd_team_jump_html( $support_label = '' ) {
 	};
 	$out = '';
 	foreach ( rd_get_team( 'dentist' ) as $m ) {
-		$out .= '<li><a href="#' . esc_attr( $m['anchor'] ) . '">' . $thumb( $m['img'] ) . esc_html( $m['name'] ) . '</a></li>';
+		$out .= '<li><a href="#' . esc_attr( $m['anchor'] ) . '">' . ( $m['img'] ? $thumb( $m['img'] ) : rd_initials_html( $m['name'] ) ) . esc_html( $m['name'] ) . '</a></li>';
 	}
 	$support = rd_get_team( 'support' );
 	if ( $support ) {

@@ -3,7 +3,7 @@
  * Practice details and opening hours (Appearance › Customize › Redlynch Dental).
  *
  * The defaults are the facts verified on the official site (redlynchdental.com.au, 26 October 2026),
- * the same values the static site's _build/lib.js uses. Header, footer, contact cards, the hours
+ * with the opening hours confirmed by the practice on 29 October 2026: the same values the static site's _build/lib.js uses. Header, footer, contact cards, the hours
  * tables, the "Open now" indicator, booking and call buttons and the map all read from here, so a
  * change in the Customizer updates every page.
  *
@@ -34,7 +34,7 @@ function rd_practice_defaults() {
 		'maps_link'     => 'https://www.google.com/maps/search/?api=1&query=Redlynch+Dental+4%2F2+Chelsea+Lane+Redlynch+QLD+4870',
 		'map_embed'     => 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d7635.351081263452!2d145.69347367458835!3d-16.891937453509275!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6978656ebcfc004d%3A0x465a2fade70d802a!2sRedlynch%20Dental!5e0!3m2!1sen!2sau!4v1611892217850!5m2!1sen!2sau',
 		'timezone'      => 'Australia/Brisbane',
-		'hours_note'    => 'After-hours and weekend appointments are available at request.',
+		'hours_note'    => '',
 		'hours_summary' => '',
 		'footer_blurb'  => 'Gentle and affordable dentistry for families in Redlynch, Brinsmead, Edge Hill, Smithfield and surrounding Cairns suburbs.',
 		'footer_risk'   => 'Any surgical or invasive procedure carries risks. Before proceeding, you should seek a second opinion from an appropriately qualified health practitioner.',
@@ -69,10 +69,10 @@ function rd_days() {
  */
 function rd_hours_defaults() {
 	return array(
-		1 => array( '08:00', '17:00' ),
-		2 => array( '08:00', '17:00' ),
-		3 => array( '08:00', '17:00' ),
-		4 => array( '08:00', '17:00' ),
+		1 => array( '08:00', '17:30' ),
+		2 => array( '08:00', '17:30' ),
+		3 => array( '08:00', '18:30' ),
+		4 => array( '08:00', '18:30' ),
 		5 => array( '08:00', '16:30' ),
 		6 => array( '', '' ),
 		0 => array( '', '' ),
@@ -154,7 +154,7 @@ function rd_hours() {
 }
 
 /**
- * Consecutive days with the same hours, for the compact tables: "Mon – Thu", "Friday", "Sat – Sun".
+ * Consecutive days with the same hours, for the compact tables: "Mon – Tue", "Friday", "Sat – Sun".
  *
  * @return array<int,array{label:string,compact:string,short:string,open:bool}>
  */
@@ -184,7 +184,7 @@ function rd_hours_groups() {
 }
 
 /**
- * One-line summary of the open days: "Mon–Thu 8am–5pm · Fri 8am–4:30pm".
+ * One-line summary of the open days: "Mon–Tue 8am–5:30pm · Wed–Thu 8am–6:30pm · Fri 8am–4:30pm".
  *
  * @return string
  */
@@ -339,7 +339,7 @@ function rd_customize_register( $wpc ) {
 		array( 'maps_link', 'rd_details', __( 'Google Maps directions link', 'redlynch-dental' ), 'url', 'esc_url_raw', '' ),
 		array( 'map_embed', 'rd_details', __( 'Google Maps embed address', 'redlynch-dental' ), 'url', 'rd_sanitize_map_embed', __( 'From Google Maps: Share › Embed a map › copy the address inside src="…". Only https://www.google.com/maps/embed addresses are accepted.', 'redlynch-dental' ) ),
 		array( 'hours_note', 'rd_hours', __( 'Note under the hours', 'redlynch-dental' ), 'text', 'sanitize_text_field', '' ),
-		array( 'hours_summary', 'rd_hours', __( 'One-line summary (optional)', 'redlynch-dental' ), 'text', 'sanitize_text_field', __( 'Leave empty to build it from the hours above, e.g. "Mon–Thu 8am–5pm · Fri 8am–4:30pm".', 'redlynch-dental' ) ),
+		array( 'hours_summary', 'rd_hours', __( 'One-line summary (optional)', 'redlynch-dental' ), 'text', 'sanitize_text_field', __( 'Leave empty to build it from the hours above, e.g. "Mon–Tue 8am–5:30pm · Wed–Thu 8am–6:30pm · Fri 8am–4:30pm".', 'redlynch-dental' ) ),
 		array( 'mega_title', 'rd_header', __( 'Services menu: emergency card heading', 'redlynch-dental' ), 'text', 'sanitize_text_field', '' ),
 		array( 'mega_text', 'rd_header', __( 'Services menu: emergency card text', 'redlynch-dental' ), 'textarea', 'sanitize_textarea_field', '' ),
 		array( 'footer_blurb', 'rd_footer', __( 'Footer introduction', 'redlynch-dental' ), 'textarea', 'sanitize_textarea_field', '' ),

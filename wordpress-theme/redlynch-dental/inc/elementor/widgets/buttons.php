@@ -86,6 +86,7 @@ class Buttons extends Base {
 				'options' => array(
 					'actions' => __( 'Button row', 'redlynch-dental' ),
 					'p'       => __( 'Paragraph (for a single text link)', 'redlynch-dental' ),
+					'none'    => __( 'No wrapper (buttons stacked in a panel)', 'redlynch-dental' ),
 				),
 			)
 		);
@@ -104,6 +105,10 @@ class Buttons extends Base {
 		$space = in_array( $s['spacing'] ?? '', array( 'mt-1', 'mt-2' ), true ) ? $s['spacing'] : '';
 		if ( 'p' === ( $s['wrap'] ?? '' ) ) {
 			$this->out( '<p' . ( $space ? ' class="' . esc_attr( $space ) . '"' : '' ) . '>' . $inner . '</p>' );
+			return;
+		}
+		if ( 'none' === ( $s['wrap'] ?? '' ) ) {
+			$this->out( $inner );
 			return;
 		}
 		$this->out( '<div class="' . esc_attr( trim( 'actions ' . $space ) ) . '">' . $inner . '</div>' );

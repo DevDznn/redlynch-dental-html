@@ -2,13 +2,14 @@
 /**
  * Builds wordpress-theme/redlynch-dental.zip with the theme folder at the root of the archive.
  *
- * Usage (from the repository root):  php wordpress-theme/tools/package.php
+ * Usage (from the repository root):  php wordpress-theme/tools/package.php [file-name.zip]
+ * With a file name, writes that ZIP in wordpress-theme/ instead (e.g. redlynch-dental-1.2.0.zip).
  * Needs PHP's zip extension. Paths inside the ZIP always use forward slashes.
  */
 
 $base = dirname( __DIR__ );
 $src  = $base . DIRECTORY_SEPARATOR . 'redlynch-dental';
-$dest = $base . DIRECTORY_SEPARATOR . 'redlynch-dental.zip';
+$dest = $base . DIRECTORY_SEPARATOR . ( isset( $argv[1] ) ? basename( $argv[1] ) : 'redlynch-dental.zip' );
 $skip = '#(^|/)(\.git|\.DS_Store|Thumbs\.db|node_modules|\.vscode)(/|$)#';
 
 if ( ! class_exists( 'ZipArchive' ) ) {

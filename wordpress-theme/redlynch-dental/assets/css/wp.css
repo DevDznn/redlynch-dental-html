@@ -21,10 +21,12 @@
    Keep the eyebrow's own size, colour and spacing where the site styles paragraphs
    (e.g. ".sec-head p" is larger and grey). */
 .elementor .elementor-widget-text-editor p.eyebrow{font-size:.78rem;line-height:inherit;margin:0 0 14px;color:var(--moss)}
-.elementor :is(.bg-ink,.bg-forest,.hero-dark) .elementor-widget-text-editor p.eyebrow{color:var(--lime)}
+.elementor :is(.bg-ink,.bg-forest,.hero-dark,.page-hero:not(.cream),.em-hero) .elementor-widget-text-editor p.eyebrow{color:var(--lime)}
 /* Homepage hero photo (an Image widget) with the visit card overlapping it. */
 .hero-media .elementor-widget-image img{display:block;width:100%;aspect-ratio:3/2;object-fit:cover;object-position:50% 30%;border-radius:var(--r-lg);box-shadow:var(--shadow);background:var(--sand)}
 .hero-media>.elementor-widget-rd-visit-card{position:static}
+/* Focus point of the hero photo (the static page sets it on the image itself). */
+.hero-media .rd-focus-30-40 img{object-position:30% 40%}
 /* Framed photos (Image widget with the classes "media-frame ratio-4-3"). */
 .media-frame img{display:block}
 .media-frame .elementor-widget-container{height:100%}
@@ -43,6 +45,20 @@
 .layout>.elementor-widget-rd-service-sidebar{position:sticky;top:calc(var(--hdr-h) + 24px);align-self:start}
 .layout>.elementor-widget-rd-service-sidebar .side{position:static}
 @media (max-width:1020px){.layout>.elementor-widget-rd-service-sidebar{position:static}}
+
+/* ---------- Campaign landing pages (body.lp, landing.css) ----------
+   landing.css targets "main>section"; here the sections sit inside Elementor's page wrapper. */
+.lp .elementor>.section:not(.lp-hero):not(.cta){padding:clamp(56px,7vw,92px) 0}
+.lp .elementor>.section.lp-foot{padding:clamp(28px,4vw,40px) 0}
+/* Flex rows in landing.css (Elementor containers default to a column). */
+.lp .e-con.rd.lp-inline-cta,.lp .lp-foot>.e-con.rd.wrap{flex-direction:row}
+/* A lone text link in the footnote sits in a paragraph (Text Editor); lay it out as on the
+   static page, where the link itself is the flex item. */
+.lp .lp-foot .lp-link{display:flex;margin:0}
+/* The hero photo and the framed photo are Image widgets carrying "ph-img" / "lp-photo". */
+.ph-img.elementor-widget-image img,.lp-photo.elementor-widget-image img{display:block}
+.rd-focus-30-40 img{object-position:30% 40%}
+@media (max-width:700px){.lp .lp-inline-cta>.elementor-widget-rd-buttons{width:100%}}
 
 /* ---------- Scroll reveals on Elementor containers ----------
    Elementor free can't add data attributes to containers, so the classes rd-reveal and

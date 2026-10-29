@@ -7,7 +7,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'RD_THEME_VERSION', '1.0.0' );
+define( 'RD_THEME_VERSION', '1.2.0' );
 define( 'RD_THEME_DIR', get_template_directory() );
 define( 'RD_THEME_URI', get_template_directory_uri() );
 

@@ -201,6 +201,16 @@ function rd_hours_mini( $class = 'hours-mini' ) {
 }
 
 /**
+ * The note under the opening hours (Customizer), if there is one.
+ *
+ * @return string
+ */
+function rd_hours_note() {
+	$note = trim( rd_practice( 'hours_note' ) );
+	return '' !== $note ? '<p class="fine" style="margin-top:12px">' . esc_html( $note ) . '</p>' : '';
+}
+
+/**
  * Opening status pill (main.js replaces the text with "Open now · until 5pm" etc.).
  *
  * @param string $class Extra classes.
@@ -322,4 +332,13 @@ function rd_theme_image( $rel ) {
  */
 function rd_is_elementor_page( $post_id ) {
 	return 'builder' === get_post_meta( $post_id, '_elementor_edit_mode', true ) && did_action( 'elementor/loaded' );
+}
+
+/**
+ * Is this a campaign landing page (the "Campaign landing page" template)?
+ *
+ * @return bool
+ */
+function rd_is_landing_page() {
+	return is_page() && is_page_template( 'page-templates/landing.php' );
 }

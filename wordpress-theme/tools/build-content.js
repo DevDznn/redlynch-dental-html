@@ -1,6 +1,9 @@
 /* Redlynch Dental: generates the WordPress theme's starter content from the static site's own
    source (_build/lib.js, _build/pages.js, _build/services.js), so the WordPress pages carry
-   exactly the verified text of the static site.
+   exactly the verified text of the static site. Where the finished HTML pages were edited by hand
+   after the build, the HTML is followed: service articles are read from the .html files, and the
+   campaign landing pages (cosmetic-dentistry.html, full-arch-dental-implants.html) are converted
+   from their HTML.
 
    Usage (from the repository root):  node wordpress-theme/tools/build-content.js
    Output: wordpress-theme/redlynch-dental/inc/import/content.json
@@ -125,7 +128,10 @@ function bodyWidgets(html) {
     if (n.tag === 'div' && /^callout/.test(c)) {
       flush();
       const style = c.replace(/\s*mt-2\s*/, '').trim();
-      out.push(widget('rd-callout', { style, content: links(n.inner), spacing: /mt-2/.test(c) ? 'mt-2' : '' }));
+      // A small button at the end of the callout ("Cosmetic dentistry options →").
+      const b = n.inner.match(/<a class="btn sm" href="([^"]+)">([\s\S]*?)<\/a>\s*$/);
+      const extra = b ? { button_label: stripSvg(b[2]).trim(), button_link: url(b[1]) } : {};
+      out.push(widget('rd-callout', { style, content: links(b ? n.inner.slice(0, b.index) : n.inner), spacing: /mt-2/.test(c) ? 'mt-2' : '', ...extra }));
       continue;
     }
     if (n.tag === 'ol' && /num-list/.test(c)) {
@@ -164,14 +170,14 @@ const HOME_FAQS = [
   ['Are you taking new patients?', 'Yes. Redlynch Dental welcomes new patients of all ages. If it is your first visit, we recommend starting with a thorough consultation and dental clean. <a href="new-patients.html">What to expect as a new patient</a>.'],
   ['What should I do in a dental emergency?', `Call us straight away on <a href="${F.tel}">${F.phone}</a>. We reserve specific appointments every day for dental emergencies and will always try to see you as soon as possible. <a href="emergency-dental-care.html">Emergency dental care</a>.`],
   ['Can I book online?', `Yes. You can <a href="${F.booking}" target="_blank" rel="noopener">book online</a> through the practice’s booking system, or call ${F.phone} and our team will find a time for you.`],
-  ['Do you offer payment plans?', 'Yes, payment plans are available. Ask our team about the options when you book or at your consultation.'],
-  ['Can I get an appointment outside normal hours?', 'Our regular hours are Monday to Thursday 8am to 5pm and Friday 8am to 4:30pm. After-hours and weekend appointments are available at request, so call us to ask.'],
+  ['What payment options do you offer?', `Payment options include ${F.payList}. Eligibility and terms are set by each provider. <a href="payments-and-fees.html">Payments and fees</a>.`],
+  ['What are your opening hours?', Pg.HOURS_TEXT],
   ['I’m nervous about visiting the dentist. Can you help?', 'Yes. The team helps many anxious patients overcome their worries and complete their treatment. Let us know what music you would like, or choose a movie to watch during your treatment, and tell us about any concerns when you book.'],
 ];
-const OFFER_ALT = 'New patient special offer: comprehensive dental check-up; all necessary X-rays including full-face X-rays; scale, clean and polish; fluoride treatment; treatment plan. Gap free with any health fund. Not in a health fund? All the above for only $199. T&Cs apply.';
 const OFFER_TICKS = ['Comprehensive dental check-up', 'All necessary X-rays, including full-face X-rays', 'Scale, clean and polish', 'Fluoride treatment'];
-const offer = o => widget('rd-offer', { image: media('offers/new-patient-special-offer.webp'), lazy: o.lazy === false ? '' : 'yes', eyebrow: o.eyebrow, title: o.title, title_tag: o.tag || 'h2', intro: o.intro || '', ticks: (o.ticks || []).join('\n'), prices: rep(o.prices), fine: o.fine, buttons: rep(o.buttons) });
-const PRICES = small2 => [{ big: 'Gap free', small: 'with any health fund' }, { big: '$199', small: small2 }];
+/* The offer photo and prices are the static site's (_build/pages.js OFFER_IMG and PRICES). */
+const PRICES = [...Pg.PRICES.matchAll(/<div><b>([\s\S]*?)<\/b><span>([\s\S]*?)<\/span><\/div>/g)].map(m => ({ big: m[1], small: m[2] }));
+const offer = o => widget('rd-offer', { image: media(Pg.OFFER_IMG), lazy: o.lazy === false ? '' : 'yes', eyebrow: o.eyebrow, title: o.title, title_tag: o.tag || 'h2', intro: o.intro || '', ticks: (o.ticks || []).join('\n'), prices: rep(PRICES), fine: o.fine, buttons: rep(o.buttons) });
 
 function home() {
   const p = Pg.home();
@@ -181,13 +187,13 @@ function home() {
       con('hero-copy', [
         eyebrow('Family dentist in Redlynch, Cairns'),
         heading('Gentle, affordable dentistry <em>for the whole family</em>', 'h1'),
-        text('<p class="lead">A modern dental practice in the Redlynch Commercial Hub, caring for patients of all ages, from children’s check-ups to implants, Invisalign® and cosmetic dentistry.</p>'),
+        text('<p class="lead">A modern dental practice in the Redlynch Commercial Hub, caring for patients of all ages, from children’s check-ups to implants, clear aligners and cosmetic dentistry.</p>'),
         buttons([book('lg', 'Book an Appointment'), call('ghost lg', `Call ${F.phone}`)]),
         text('<ul class="hero-facts"><li><b>3 dentists</b> caring for local families</li><li><b>Online booking</b> at a time that suits you</li></ul>'),
       ], { inner: true }),
       con('hero-media', [
-        image('team/redlynch-dental-team-group.webp'),
-        widget('rd-visit-card', { title: 'Book your visit', rows: rep([['Emergency appointments', 'Reserved daily'], ['New patients', 'All ages welcome'], ['After-hours and weekends', 'At request'], ['Payment plans', 'Available']].map(([label, value]) => ({ label, value }))), button: 'Call {phone}' }),
+        image('hero/smiling-mother-and-daughter.webp', 'rd-focus-30-40'),
+        widget('rd-visit-card', { title: 'Book your visit', rows: rep([['Emergency appointments', 'Reserved daily'], ['New patients', 'All ages welcome'], ['Eligible children', 'CDBS bulk billed'], ['Payment options', 'Afterpay, Zip and more']].map(([label, value]) => ({ label, value }))), button: 'Call {phone}' }),
       ], { inner: true }),
     ], { inner: true })], { inner: true })], { tag: 'section' }),
     bare(widget('rd-link-strip', { items: rep([
@@ -210,14 +216,14 @@ function home() {
         eyebrow('About the practice'),
         heading('The very best treatment, at competitive prices, in a relaxing environment.', 'h2'),
         text('<p>Redlynch Dental caters to all of your family’s dental needs, from children’s dentistry all the way up to high-end cosmetic cases. We take the time to listen, understand what you want to achieve, and guide you down the right path to get there.</p>'),
-        widget('rd-icon-cards', { layout: 'features', items: rep([['wallet', 'Affordable pricing', 'Competitive prices and payment plans'], ['moon', 'Flexible appointments', 'After-hours and weekends at request'], ['heart', 'Caring, gentle staff', 'More than just a job to us'], ['cpu', 'Modern equipment', 'In a relaxing environment']].map(([icon, title, t]) => ({ icon, title, text: t, extra: '', tone: 'dent' }))) }),
+        widget('rd-icon-cards', { layout: 'features', items: rep([['wallet', 'Affordable pricing', 'Competitive prices and payment options'], ['moon', 'Later appointments', 'Open until 6:30pm on Wednesday and Thursday'], ['heart', 'Caring, gentle staff', 'More than just a job to us'], ['cpu', 'Modern equipment', 'In a relaxing environment']].map(([icon, title, t]) => ({ icon, title, text: t, extra: '', tone: 'dent' }))) }),
         text(`<p class="area-note">Proudly serving ${F.suburbs.slice(0, 4).join(', ')} and surrounding Cairns suburbs.</p>`),
         buttons([linkBtn('about', 'More about the practice', 'ghost', true)]),
       ], { inner: true }),
       image('services/dental-examination.webp', 'media-frame ratio-4-3 rd-reveal rd-focus-64-30'),
     ], { inner: true })]),
     section('bg-paper', [
-      secHead({ eb: 'Our services', h: 'Everything your family needs, under one roof', p: 'From routine check-ups and children’s dentistry to implants, Invisalign® and same-day emergency care.', row: true, btns: buttons([linkBtn('services', 'Explore all 15 services', 'ghost', true)]) }),
+      secHead({ eb: 'Our services', h: 'Everything your family needs, under one roof', p: 'From routine check-ups and children’s dentistry to implants, clear aligners and same-day emergency care.', row: true, btns: buttons([linkBtn('services', 'Explore all 15 services', 'ghost', true)]) }),
       widget('rd-service-cards', { items: rep(cards.map(([slug, focus]) => ({ service: `rd-id:${slug}`, focus, badge: slug === 'emergency-dental-care' ? 'Same-day care' : '', more: slug === 'emergency-dental-care' ? 'What to do now' : 'Learn more' }))) }),
     ]),
     section('bg-forest', [con('split top', [
@@ -231,21 +237,21 @@ function home() {
         ['music', 'Your choice of music or a movie', 'Let us know what music we can play for you, or choose a movie to watch while your treatment is completed.'],
         ['heart', 'Care for anxious patients', 'We help many anxious patients overcome their apprehensions and complete their dental treatment, at a pace that suits them.'],
         ['book', 'A clear, printed treatment plan', 'After a comprehensive check-up you receive a printed plan with the most accurate estimate we can give of the time and cost involved.'],
-        ['wallet', 'Flexible ways to pay', 'Payment plans are available for larger treatment, and implant consultations are complimentary. Ask our team which options suit you.'],
+        ['wallet', 'Flexible ways to pay', `Payment options include ${F.payList}, and implant consultations are complimentary. Ask our team which options suit you.`],
       ].map(([icon, title, t]) => ({ icon, title, text: `<p>${t}</p>`, extra: '', tone: 'dent' }))) }),
     ], { inner: true })]),
     section('', [
-      secHead({ eb: 'Meet the dentists', h: 'Friendly faces, gentle hands', p: 'Our dentists trained at La Trobe University and James Cook University, and bring experience from across Queensland and overseas.', row: true, btns: buttons([linkBtn('our-team', 'Meet our team', 'ghost', true)]) }),
+      secHead({ eb: 'Meet the dentists', h: 'Friendly faces, gentle hands', p: 'Our three dentists care for patients of all ages, from children’s check-ups and cosmetic dentistry to single and full arch dental implants.', row: true, btns: buttons([linkBtn('our-team', 'Meet our team', 'ghost', true)]) }),
       widget('rd-team', { layout: 'cards', link: pageUrl('our-team') }),
       widget('rd-team', { layout: 'support-row' }),
     ]),
-    section('bg-sand', [offer({ eyebrow: 'New patient special offer', title: 'New to Redlynch Dental? Start with a thorough check-up.', intro: 'We welcome new patients of all ages. Your first visit includes:', ticks: [...OFFER_TICKS, 'A printed treatment plan'], prices: PRICES('if you’re not in a health fund'), fine: 'Terms and conditions apply. Ask our team for full details when you book.', buttons: [book('', 'Book an Appointment'), linkBtn('new-patients', 'New patient information', 'ghost')] })]),
+    section('bg-sand', [offer({ eyebrow: 'New patient special offer', title: 'New to Redlynch Dental? Start with a thorough check-up.', intro: 'We welcome new patients of all ages. Your first visit includes:', ticks: [...OFFER_TICKS, 'A printed treatment plan'], fine: 'Terms and conditions apply. Ask our team for full details when you book.', buttons: [book('', 'Book an Appointment'), linkBtn('new-patients', 'New patient information', 'ghost')] })]),
     section('bg-paper', [con('split', [
       image('services/childrens-dentistry-smiling-girl.webp', 'media-frame ratio-4-3 rd-reveal rd-focus-62-50'),
       con('rd-reveal', [
         eyebrow('Preventive and family dentistry'),
         heading('Healthy habits start young, and last a lifetime.', 'h2'),
-        text('<p>Fun, positive early experiences at the dentist help children grow up without unnecessary dental fears. We offer free kids dentistry, so ask our team about eligibility when you book.</p><p>For the whole family, regular check-ups and cleans let us find and treat small problems early, which saves time and money and helps you keep your natural teeth.</p>'),
+        text('<p>Fun, positive early experiences at the dentist help children grow up without unnecessary dental fears. We bulk bill eligible children under the Child Dental Benefits Schedule (CDBS), so ask our team about eligibility when you book.</p><p>For the whole family, regular check-ups and cleans let us find and treat small problems early, which saves time and money and helps you keep your natural teeth.</p>'),
         buttons(['childrens-dentistry', 'check-ups-and-dental-cleans', 'mouthguards'].map(s => linkBtn(s, byslug[s].navName, s === 'childrens-dentistry' ? 'sm' : 'ghost sm'))),
       ], { inner: true }),
     ], { inner: true })]),
@@ -268,24 +274,24 @@ function home() {
 function about() {
   const p = Pg.about();
   const els = [
-    bare(widget('rd-page-hero', { tone: 'forest', crumbs: 'yes', parents: [], current: 'About Us', eyebrow: 'About Redlynch Dental', title: 'A modern practice with a local, family feel.', lead: 'Redlynch Dental is a modern Cairns dental practice in the Redlynch Commercial Hub, caring for local families with gentle, affordable dentistry.', buttons: [], meta: '{address}\nNew patients of all ages\nEmergency appointments daily', visual: 'image', image: media('team/redlynch-dental-team-group.webp'), alt: 'Three members of the Redlynch Dental team in black uniforms, smiling' })),
+    bare(widget('rd-page-hero', { tone: 'forest', crumbs: 'yes', parents: [], current: 'About Us', eyebrow: 'About Redlynch Dental', title: 'A modern practice with a local, family feel.', lead: 'Redlynch Dental is a modern Cairns dental practice in the Redlynch Commercial Hub, caring for local families with gentle, affordable dentistry.', buttons: [], meta: '{address}\nNew patients of all ages\nEmergency appointments daily', visual: 'image', image: media('services/dental-examination.webp'), alt: 'A dentist examining a smiling patient’s teeth', focus: '64% 30%' })),
     section('bg-paper', [con('split wide-left top', [
       con('rd-reveal', [
         eyebrow('Who we are'),
         heading('More than just a job to us', 'h2'),
-        text('<p>We proudly serve the local community of Redlynch, as well as Brinsmead, Edge Hill, Smithfield and the surrounding suburbs of Cairns. We cater to all of your family’s dental needs, from children’s dentistry all the way up to high-end cosmetic cases, and everything in between.</p><p>We take great pride in providing the very best dental treatment, at competitive prices, in the most relaxing environment possible. All of our staff are knowledgeable and passionate about what we do. It is definitely more than just a job to us.</p><p>We take the time to listen to you and understand what you want to achieve, and then help guide you down the right path to get there. Many of our patients say they wish they had come to see us earlier.</p>'),
+        text('<p>We proudly serve the local community of Redlynch, as well as Brinsmead, Edge Hill, Smithfield and the surrounding suburbs of Cairns. We cater to all of your family’s dental needs, from children’s dentistry all the way up to high-end cosmetic cases, and everything in between.</p><p>We take great pride in providing the Quality treatment at competitive prices in the most relaxing environment possible. All of our staff are knowledgeable and passionate about what we do. It is definitely more than just a job to us.</p><p>We take the time to listen to you and understand what you want to achieve, and then help guide you down the right path to get there. Many of our patients say they wish they had come to see us earlier.</p>'),
       ], { inner: true }),
-      widget('rd-callout', { style: 'card lime', label: 'At a glance', content: `<ul class="ticks"><li>Located within the Redlynch Commercial Hub, at ${F.street}</li><li>Three dentists, supported by our practice manager and dental assistant</li><li>Appointments reserved every day for dental emergencies</li><li>After-hours and weekend appointments available at request</li><li>Payment plans available</li><li>Online booking available</li></ul>` }),
+      widget('rd-callout', { style: 'card lime', label: 'At a glance', content: `<ul class="ticks"><li>Located within the Redlynch Commercial Hub, at ${F.street}</li><li>Three dentists, supported by our practice manager and support staff</li><li>Appointments reserved every day for dental emergencies</li><li>Bulk billing for eligible children under the Child Dental Benefits Schedule (CDBS)</li><li>Payment options include ${F.payList}</li><li>Online booking available</li></ul>` }),
     ], { inner: true })]),
     section('', [
       secHead({ eb: 'Why patients choose us', h: 'What you can expect from us' }),
       widget('rd-icon-cards', { layout: 'cards', columns: 'g3', items: rep([
-        ['wallet', 'Affordable pricing', 'The very best treatment at competitive prices, with a printed treatment plan and cost estimate before you begin. Payment plans are available.'],
+        ['wallet', 'Affordable pricing', 'The very best treatment at competitive prices, with a printed treatment plan and cost estimate before you begin. Several payment options are available.'],
         ['heart', 'Knowledgeable, caring and gentle', 'A team that listens, explains your options clearly, and helps anxious patients feel at ease.'],
         ['cpu', 'Modern equipment', 'Including 3D X-ray planning and computer-guided implant placement, and high-precision magnification for veneers.'],
         ['music', 'A relaxing environment', 'Tell us what music you would like, or choose a movie to watch while your treatment is completed.'],
-        ['moon', 'Flexible appointments', 'After-hours and weekend appointments are available at request, and you can book online.'],
-        ['users', 'For the whole family', 'From children’s first visits to implants, Invisalign® and cosmetic dentistry, all in one place.'],
+        ['moon', 'Flexible appointments', 'Open until 6:30pm on Wednesday and Thursday, and you can book online.'],
+        ['users', 'For the whole family', 'From children’s first visits to implants, clear aligners and cosmetic dentistry, all in one place.'],
       ].map(([icon, title, t]) => ({ icon, title, text: `<p>${t}</p>`, extra: '', tone: 'dent' }))) }),
     ]),
     section('bg-forest', [
@@ -354,7 +360,7 @@ function newPatients() {
         widget('rd-callout', { style: 'callout', content: '<p><strong>Understanding your treatment plan.</strong> You are always welcome to ask why a treatment is recommended, what the alternatives are, what happens if you wait, and what it will cost. It is your decision, and we want you to feel confident making it.</p>' }),
       ], { inner: true }),
     ], { inner: true })]),
-    section('bg-sand', [offer({ eyebrow: 'New patient special offer', title: 'Comprehensive check-up, X-rays, clean and treatment plan', tag: 'h3', prices: PRICES('if you’re not in a health fund'), fine: 'Terms and conditions apply. Ask our team for full details when you book.', buttons: [book(''), linkBtn('special-offers', 'Offer details', 'ghost')] })]),
+    section('bg-sand', [offer({ eyebrow: 'New patient special offer', title: 'Comprehensive check-up, X-rays, clean and treatment plan', tag: 'h3', fine: 'Terms and conditions apply. Ask our team for full details when you book.', buttons: [book(''), linkBtn('special-offers', 'Offer details', 'ghost')] })]),
     section('bg-paper', [con('split top', [
       secHead({ eb: 'Questions', h: 'New patient questions', p: 'More answers on our <a href="faq.html">FAQ page</a>.' }),
       faqWidget(faqs),
@@ -367,16 +373,23 @@ function newPatients() {
 function servicesIndex() {
   const p = Pg.servicesIndex();
   const els = [
-    bare(widget('rd-page-hero', { tone: 'forest', crumbs: 'yes', parents: [], current: 'Services', eyebrow: 'Our services', title: 'Complete dental care for every age and every smile.', lead: 'From check-ups and children’s dentistry to implants, Invisalign® and emergency care. Choose a service to learn more, or call us and we will point you in the right direction.', buttons: rep([call('', F.phone), btn('emergency', 'ember', 'Dental emergency?')]), meta: '', visual: 'none' })),
+    bare(widget('rd-page-hero', { tone: 'forest', crumbs: 'yes', parents: [], current: 'Services', eyebrow: 'Our services', title: 'Complete dental care for every age and every smile.', lead: 'From check-ups and children’s dentistry to implants, clear aligners and emergency care. Choose a service to learn more, or call us and we will point you in the right direction.', buttons: rep([call('', F.phone), btn('emergency', 'ember', 'Dental emergency?')]), meta: '', visual: 'none' })),
     section('bg-paper', [widget('rd-service-directory', { ...Object.fromEntries(CATS.flatMap(c => [[`name_${c.id}`, c.name], [`blurb_${c.id}`, c.blurb]])), note: `Treatment suitability depends on an individual clinical assessment. ${RISK}` })]),
     cta(p.cta),
   ];
   return { slug: 'services', title: 'Services', page: p, elements: els };
 }
 
+/* The service article as published in the finished HTML page (it may have been edited by hand). */
+function htmlArticle(s) {
+  const file = path.join(ROOT, s.file);
+  const m = fs.existsSync(file) && fs.readFileSync(file, 'utf8').match(/<article class="prose">([\s\S]*?)<\/article>/);
+  return m ? m[1].trim() : '';
+}
+
 function servicePage(s) {
   const p = Pg.servicePage(s);
-  const crumb = s.navName.replace('®', '');
+  const crumb = s.navName;
   let hero = { tone: 'forest', crumbs: 'yes', parents: rep([{ label: 'Services', link: pageUrl('services') }]), current: crumb, eyebrow: s.eyebrow, title: s.h1, lead: s.lead, buttons: rep([book(''), call('ghost-light', F.phone)]), meta: (s.heroMeta || []).join('\n'), visual: 'none' };
   if (!s.img) hero = { ...hero, visual: 'art', art_icon: s.icon, art_text: s.artText || s.name };
   else if (s.imgContain) hero = { ...hero, visual: 'contain', image: media(s.img), alt: s.imgAlt };
@@ -384,14 +397,14 @@ function servicePage(s) {
   const els = [
     bare(widget('rd-page-hero', hero)),
     section('bg-paper', [con('layout', [
-      con('prose', bodyWidgets(s.body()), { inner: true, tag: 'article' }),
+      con('prose', bodyWidgets(htmlArticle(s) || s.body()), { inner: true, tag: 'article' }),
       widget('rd-service-sidebar', { em: '', book_title: 'Book an appointment', book_text: 'Call our Redlynch team, or book online at a time that suits you.', contact_link: pageUrl('contact') }),
     ], { inner: true })]),
     s.faqs && s.faqs.length && section('', [con('split top', [
       secHead({ eb: 'Questions', h: `${s.navName}: your questions answered`, p: `Still unsure? Call <a href="${F.tel}">${F.phone}</a> and talk to our team.` }),
       faqWidget(s.faqs),
     ], { inner: true })]),
-    s.blog && section('bg-sand sec-tight', [widget('rd-post-feature', { post: 'rd-post-id:why-choose-dental-implants', tag: 'From our blog', text: 'The advantages of implants, from our Principal Dentist.', date: '', decorative: 'yes', more: 'Read the article' })]),
+    s.blog && section('bg-sand sec-tight', [widget('rd-post-feature', { post: 'rd-post-id:why-choose-dental-implants', tag: 'From our blog', text: 'The advantages of implants, from the Redlynch Dental team.', date: '', decorative: 'yes', more: 'Read the article' })]),
     (s.related || []).length && section('bg-paper sec-tight', [widget('rd-related', { heading: 'Related treatments', services: s.related.map(r => `rd-id:${r}`) })]),
     cta(p.cta),
   ].filter(Boolean);
@@ -406,7 +419,7 @@ function emergency() {
   const p = Pg.emergency();
   const faqs = [
     ['Can I be seen today?', 'We reserve specific appointments every day for dental emergencies, and will always strive to make time to see you as soon as possible. Call as early as you can. Same-day appointments depend on availability, so call us straight away.'],
-    ['What if it’s outside opening hours?', `Our hours are Monday to Thursday 8am to 5pm and Friday 8am to 4:30pm. After-hours and weekend appointments are available at request, but are not guaranteed, so call ${F.phone} to check. If you can’t reach us and your symptoms are severe or getting worse, go to your nearest hospital emergency department or call 000. For health advice, you can call 13 HEALTH (13 43 25 84) in Queensland.`],
+    ['What if it’s outside opening hours?', `Our hours are Monday and Tuesday 8am to 5:30pm, Wednesday and Thursday 8am to 6:30pm, and Friday 8am to 4:30pm. We are closed on weekends. Outside these hours, if your symptoms are severe or getting worse, go to your nearest hospital emergency department or call 000. For health advice, you can call 13 HEALTH (13 43 25 84) in Queensland.`],
     ['Should I go to hospital instead?', 'Go to a hospital emergency department or call 000 if you have swelling affecting your breathing, swallowing or eye; bleeding that won’t stop; a serious head or facial injury; or if you feel very unwell with a high fever. For most other dental pain, broken teeth and lost fillings, call us.'],
     ['What can I do for a toothache until I’m seen?', 'Take over-the-counter pain relief as directed on the packet or by your pharmacist, rinse gently with warm water, and avoid very hot, cold or sweet foods. Don’t put aspirin or other tablets directly on the gum. Call us to arrange an appointment.'],
     ['A tooth has been knocked out. What do I do?', 'Call us immediately: time matters. Handle the tooth by the crown (the white part), not the root. If it is dirty, rinse it briefly in milk. Keep it moist in milk, or for adults, inside the cheek, and bring it with you. Don’t try to put a baby tooth back in. We will give you more instructions on the phone.'],
@@ -488,7 +501,7 @@ function blog() {
     ['childrens-dentistry', 'Family', 'Helping children have positive early visits, and caring for little teeth at home.'],
     ['teeth-whitening', 'Cosmetic', 'Is whitening safe? Side effects, suitability and keeping your results.'],
     ['wisdom-teeth', 'Oral surgery', 'Common wisdom tooth problems, and when removal is recommended.'],
-    ['invisalign', 'Straightening', 'How Invisalign® works, how long it takes and what happens after.'],
+    ['invisalign', 'Straightening', 'How clear aligners work, how long treatment takes and what happens after.'],
     ['root-canal-therapy', 'Restorative', 'Why root canal treatment can save a tooth, and what to expect.'],
   ];
   const els = [
@@ -518,7 +531,7 @@ function contact() {
       con('rd-reveal', [widget('rd-contact-form', {
         heading: 'Send an enquiry',
         intro: 'Fields marked * are required. Pressing “Prepare email” opens your email app with your message ready to send to {email}. For urgent problems, please call us.',
-        reasons: 'General enquiry\nNew patient appointment\nCheck-up and clean\nChildren’s dentistry\nCosmetic treatment\nDental implants\nInvisalign®\nSomething else',
+        reasons: 'General enquiry\nNew patient appointment\nCheck-up and clean\nChildren’s dentistry\nCosmetic treatment\nDental implants\nClear aligners\nSomething else',
         consent: 'I agree to {practice} using these details to reply to my enquiry. See our {privacy}.',
         button: 'Prepare email',
       })], { inner: true }),
@@ -533,12 +546,45 @@ function specialOffers() {
   const els = [
     bare(widget('rd-page-hero', { tone: 'cream', crumbs: 'yes', parents: [], current: 'New Patient Offer', eyebrow: 'Special offers', title: 'New patient special offer', lead: 'A comprehensive start with Redlynch Dental: check-up, X-rays, clean, fluoride and a treatment plan.', buttons: [], meta: '', visual: 'none' })),
     section('bg-paper', [
-      offer({ lazy: false, eyebrow: 'What’s included', title: 'Everything you need for a fresh start', ticks: [...OFFER_TICKS, 'Treatment plan'], prices: PRICES('not in a health fund'), fine: 'Terms and conditions apply to all offers. Please ask our team for the full terms and conditions when you book.', buttons: [book(''), call('ghost', F.phone)] }),
+      offer({ lazy: false, eyebrow: 'What’s included', title: 'Everything you need for a fresh start', ticks: [...OFFER_TICKS, 'Treatment plan'], fine: 'Terms and conditions apply to all offers. Please ask our team for the full terms and conditions when you book.', buttons: [book(''), call('ghost', F.phone)] }),
       buttons([{ ...linkBtn('new-patients', 'What to expect at your first visit'), style: 'text' }], 'mt-2', 'p'),
+      buttons([{ ...linkBtn('payments-and-fees', 'Payments and fees'), style: 'text' }], 'mt-1', 'p'),
     ]),
     cta(p.cta),
   ];
   return { slug: 'special-offers', title: 'New Patient Special Offer', page: p, elements: els };
+}
+
+function payments() {
+  const p = Pg.payments();
+  const els = [
+    bare(widget('rd-page-hero', { tone: 'cream', crumbs: 'yes', parents: [], current: 'Payments and Fees', eyebrow: 'Payments and fees', title: 'Clear costs and flexible ways to pay', lead: 'Your treatment plan and its costs are discussed with you before any treatment starts. Here is our new patient offer, how treatment costs work, and the payment options available at Redlynch Dental.', buttons: rep([book(''), call('ghost', F.phone)]), meta: '', visual: 'none' })),
+    section('bg-paper', [offer({ eyebrow: 'New patient special offer', title: 'Check-up, X-rays, clean and treatment plan', ticks: [...OFFER_TICKS, 'A printed treatment plan'], fine: 'Terms and conditions apply. Ask our team for full details when you book.', buttons: [book('', 'Book an Appointment'), linkBtn('special-offers', 'Offer details', 'ghost')] })]),
+    section('', [con('split top', [
+      con('rd-reveal', [
+        eyebrow('Treatment costs'),
+        heading('Your costs, explained before treatment', 'h2'),
+        text('<p>Treatment costs depend on what you need, so we don’t quote one price for everyone. After your examination, your dentist explains your treatment plan, and we discuss the plan and its costs with you before any treatment starts.</p><p>You are always welcome to ask why a treatment is recommended, what the alternatives are and what each option costs. It is your decision, and we want you to feel confident making it.</p>'),
+      ], { inner: true }),
+      widget('rd-callout', { style: 'card lime', label: 'Health funds', content: '<p>If you have private health insurance with dental cover, what you can claim depends on your fund and your level of cover. Ask your fund what you are covered for, and ask our team when you book.</p>' }),
+    ], { inner: true })]),
+    section('bg-paper', [
+      secHead({ eb: 'Payment options', h: 'Ways to pay for your treatment', p: 'Redlynch Dental offers these payment providers. Ask our team which options can be used for your treatment.' }),
+      widget('rd-icon-cards', { layout: 'cards', columns: 'g4', items: rep(F.payProviders.map(title => ({ icon: 'wallet', title, text: '', extra: '', tone: 'dent' }))) }),
+      widget('rd-callout', { style: 'callout info', spacing: 'mt-2', content: '<p><strong>Before you apply.</strong> Eligibility, fees and terms are set by each provider and may vary. Approval is not guaranteed, and Redlynch Dental can’t promise specific payment terms. Please read the provider’s terms before you apply, and ask our team if you have any questions.</p>' }),
+    ]),
+    section('', [con('split', [
+      image('services/childrens-dentistry-smiling-girl.webp', 'media-frame ratio-4-3 rd-reveal rd-focus-62-50'),
+      con('rd-reveal', [
+        eyebrow('Children’s dental benefits'),
+        heading('Bulk billing for eligible children', 'h2'),
+        text('<p>Redlynch Dental bulk bills eligible children under the Child Dental Benefits Schedule (CDBS).</p><p>Not every child is eligible, so please ask our team about your child’s situation when you book.</p>'),
+        buttons([linkBtn('childrens-dentistry', 'Children’s dentistry', 'sm'), linkBtn('contact', 'Contact us', 'ghost sm')]),
+      ], { inner: true }),
+    ], { inner: true })]),
+    cta(p.cta),
+  ];
+  return { slug: 'payments-and-fees', title: 'Payments and Fees', page: p, elements: els };
 }
 
 function privacy() {
@@ -551,10 +597,109 @@ function privacy() {
   return { slug: 'privacy-policy', title: 'Privacy Policy', page: p, elements: els };
 }
 
+/* ------------------------------------------------------------------ campaign landing pages */
+/* The landing pages exist only as HTML (no _build source). Each section becomes native containers
+   with the same classes, native Heading / Text Editor / Image widgets, and Redlynch widgets for the
+   buttons, icon cards, steps, enquiry form and FAQ. The page uses the "Campaign landing page"
+   template, which adds body.lp and landing.css. */
+const LANDING = [['cosmetic-dentistry', 'Cosmetic Dentistry'], ['full-arch-dental-implants', 'Full Arch Dental Implants']];
+const revealCls = n => (/ data-reveal(?=[\s>=]|$)/.test(n.attrs) ? ' rd-reveal' : '');
+const attr = (n, a) => (n.attrs.match(new RegExp(` ${a}="([^"]*)"`)) || [])[1] || '';
+const noLabelledby = html => html.replace(/ aria-labelledby="[^"]*"/g, '');
+
+function lpButton(a) {
+  const href = attr(a, 'href').replace(/&amp;/g, '&');
+  const c = cls(a).replace(/^btn\s*/, '');
+  const label = stripSvg(a.inner).replace(/<span class="sr-only">[\s\S]*?<\/span>/, '').replace(/<[^>]+>/g, '').trim();
+  if (href === F.booking) return book(c, label);
+  if (href === F.tel) return call(c, label);
+  return { ...btn('link', c, label, url(href)), arrow: /class="arr"/.test(a.inner) ? 'yes' : '' };
+}
+function lpImage(n, classes) {
+  const img = n.tag === 'img' ? n.outer : n.inner;
+  const pos = img.match(/object-position:(\d+)% (\d+)%/);
+  return image(img.match(/src="([^"]+)"/)[1], classes + (pos ? ` rd-focus-${pos[1]}-${pos[2]}` : ''));
+}
+function lpChildren(html) {
+  const out = []; let buf = []; let btns = null;
+  const flush = () => { if (buf.length) { out.push(text(noLabelledby(buf.join('')))); buf = []; } btns = null; };
+  for (const n of topLevel(html)) {
+    const c = cls(n);
+    if (n.tag === 'a' && /\bbtn\b/.test(c)) {
+      // Buttons placed one after another in a panel: one Buttons widget, no wrapper.
+      if (!btns) { flush(); btns = buttons([], '', 'none'); out.push(btns); }
+      btns.settings.buttons.push(...rep([lpButton(n)]));
+      continue;
+    }
+    if (n.tag === 'span' && c === 'eyebrow') { flush(); out.push(eyebrow(n.inner)); continue; }
+    if (/^h[1-6]$/.test(n.tag)) { flush(); out.push(heading(n.inner, n.tag)); continue; }
+    if (n.tag === 'div' && /\bactions\b/.test(c)) {
+      flush();
+      out.push(buttons(topLevel(n.inner).map(lpButton), '', 'actions', (c.replace(/\bactions\b/, '') + revealCls(n)).trim() || undefined));
+      continue;
+    }
+    if (n.tag === 'ul' && /\blp-cards\b/.test(c)) {
+      flush();
+      const items = topLevel(n.inner).map(li => {
+        const body = topLevel(li.inner).find(x => x.tag === 'div');
+        return { icon: iconOf(li.inner), title: (body.inner.match(/<h3>([\s\S]*?)<\/h3>/) || [])[1] || '', text: links(body.inner.replace(/<h3>[\s\S]*?<\/h3>/, '').trim()), extra: '', tone: 'dent' };
+      });
+      const grid = /\blp-options\b/.test(c) ? 'lp-options on-cream' : (/\bc3\b/.test(c) ? 'c3' : '');
+      out.push(widget('rd-icon-cards', { layout: 'lp', lp_grid: grid, items: rep(items) }));
+      continue;
+    }
+    if (n.tag === 'ol' && /\blp-steps\b/.test(c)) {
+      flush();
+      const items = [...n.inner.matchAll(/<li><h3>([\s\S]*?)<\/h3><p>([\s\S]*?)<\/p><\/li>/g)].map(x => ({ title: x[1], text: links(x[2]) }));
+      out.push(widget('rd-steps', { layout: 'lp', items: rep(items) }));
+      continue;
+    }
+    if (n.tag === 'div' && c === 'faq') {
+      flush();
+      out.push(faqWidget([...n.inner.matchAll(/<details><summary>([\s\S]*?)<\/summary><div class="ans">([\s\S]*?)<\/div><\/details>/g)].map(x => [x[1], x[2]])));
+      continue;
+    }
+    if (n.tag === 'form') {
+      flush();
+      const m = re => (n.inner.match(re) || [])[1] || '';
+      out.push(widget('rd-contact-form', {
+        heading: m(/<h3>([\s\S]*?)<\/h3>/),
+        intro: m(/<p id="form-intro"[^>]*>([\s\S]*?)<\/p>/).replace(F.email, '{email}'),
+        reason_fixed: m(/name="reason" value="([^"]*)"/),
+        message_label: m(/<label for="f-message">([\s\S]*?)<\/label>/),
+        button: stripSvg(m(/<button[^>]*>([\s\S]*?)<\/button>/)).trim(),
+        variant: /\bdark\b/.test(m(/<button class="([^"]*)"/)) ? 'landing' : '',
+      }));
+      continue;
+    }
+    if (n.tag === 'figure' || (n.tag === 'div' && /\bph-img\b/.test(c))) { flush(); out.push(lpImage(n, (c + revealCls(n)).trim())); continue; }
+    if (n.tag === 'div' && c === 'lp-book-meta') { buf.push(n.outer); continue; }
+    if (n.tag === 'div') { flush(); out.push(con((c + revealCls(n)).trim(), lpChildren(n.inner), { inner: true })); continue; }
+    // The footnote's parts stay separate (they sit side by side); a lone text link gets a paragraph.
+    if (n.tag === 'p' && /\b(risk|lp-more)\b/.test(c)) { flush(); out.push(text(n.outer)); continue; }
+    if (n.tag === 'a') { flush(); out.push(text(`<p class="lp-link">${n.outer}</p>`)); continue; }
+    buf.push(n.outer);
+  }
+  flush();
+  return out;
+}
+function landingPage([slug, title]) {
+  const h = fs.readFileSync(path.join(ROOT, slug + '.html'), 'utf8');
+  const head = re => ((h.match(re) || [])[1] || '').replace(/&amp;/g, '&');
+  const els = topLevel(h.match(/<main id="main">([\s\S]*?)<\/main>/)[1]).map(sec => {
+    const wrap = topLevel(sec.inner)[0];
+    return con(('section ' + cls(sec)).trim(), [con(cls(wrap), lpChildren(wrap.inner), { inner: true })], { tag: 'section', id: attr(sec, 'id') || undefined });
+  });
+  const page = { title: head(/<title>([\s\S]*?)<\/title>/), desc: head(/<meta name="description" content="([^"]*)"/), noindex: /noindex/.test(head(/<meta name="robots" content="([^"]*)"/)) };
+  for (const m of h.matchAll(/<img src="assets\/images\/([^"]+)" alt="([^"]+)"/g)) if (!LANDING_ALTS[m[1]]) LANDING_ALTS[m[1]] = m[2];
+  return { slug, title, page, elements: els, template: 'page-templates/landing.php' };
+}
+const LANDING_ALTS = {};
+
 /* ------------------------------------------------------------------ assemble */
 const pages = [home(), about(), team(), newPatients(), servicesIndex(),
   ...services.map(s => (s.custom ? emergency() : servicePage(s))),
-  faq(), blog(), contact(), specialOffers(), privacy()];
+  faq(), blog(), contact(), specialOffers(), payments(), privacy(), ...LANDING.map(landingPage)];
 
 const out = {
   generator: 'wordpress-theme/tools/build-content.js',
@@ -566,19 +711,19 @@ const out = {
     seo: { title: pg.page.title, description: pg.page.desc.replace(/\s+/g, ' '), noindex: !!pg.page.noindex },
     excerpt: pg.page.desc.replace(/\s+/g, ' '),
     service: pg.service || null,
+    template: pg.template || 'default',
     elementor: pg.elements,
   })),
 };
 
-/* Team: the static site's TEAM data plus the support team. */
-const SUPPORT = [
-  { id: 'erin', name: 'Erin', role: 'Practice Manager', quals: 'Certificate III in Dental Assisting', img: 'team/erin-practice-manager.webp' },
-  { id: 'ella', name: 'Ella', role: 'Dental Assistant', quals: '', img: 'team/ella-dental-assistant.webp' },
-];
+/* Team: the static site's TEAM and SUPPORT data. Members without a photo show their initials. */
+const rel = img => (img || '').replace(/^assets\/images\//, '');
 out.team = [
-  ...Pg.TEAM.map((m, i) => ({ name: m.name, group: 'dentist', order: i, role: m.role, quals: m.quals, quals_long: m.qualsLong, focus_heading: i === 0 ? 'Areas of expertise' : 'Known for', focus: m.focus, anchor: m.id, img: m.img.replace(/^assets\/images\//, ''), bio: m.bio })),
-  ...SUPPORT.map((m, i) => ({ name: m.name, group: 'support', order: 10 + i, role: m.role, quals: m.quals, quals_long: '', focus_heading: '', focus: [], anchor: m.id, img: m.img, bio: [] })),
+  ...Pg.TEAM.map((m, i) => ({ name: m.name, group: 'dentist', order: i, role: m.role, quals: m.quals, quals_long: m.qualsLong, focus_heading: 'Known for', focus: m.focus, anchor: m.id, img: rel(m.img), bio: m.bio })),
+  ...Pg.SUPPORT.map((m, i) => ({ name: m.name, group: 'support', order: 10 + i, role: m.role, quals: m.quals, quals_long: '', focus_heading: '', focus: [], anchor: m.id, img: rel(m.img), bio: [] })),
 ];
+/* Profiles of people who have left the practice: the importer moves them to Drafts. */
+out.retired_team = ['dr-alex-bornsztejn', 'dr-julian-fung', 'erin', 'ella'];
 
 /* The blog article (post content is plain HTML for the block or classic editor). */
 const bp = Pg.blogPost();
@@ -588,7 +733,7 @@ const article = bp.body.match(/<article class="article prose">([\s\S]*?)<\/artic
   .replace(/\n\s+/g, '\n').trim();
 out.posts = [{
   slug: 'why-choose-dental-implants', title: 'Why choose dental implants?', date: '2021-01-29 09:00:00',
-  category: 'Dental implants', byline: 'Dr Alex Bornsztejn, Principal Dentist',
+  category: 'Dental implants', byline: 'Redlynch Dental',
   excerpt: 'Dental implants are a simple and proven way to replace one or more missing teeth. Here are the main advantages.',
   featured: 'blog/dental-implant-crown-illustration.webp',
   content: links(article),
@@ -597,15 +742,14 @@ out.posts = [{
 
 /* Media Library alternative text (informative images; decorative uses set alt="" in the widgets). */
 out.media = {
-  'team/redlynch-dental-team-group.webp': 'Three members of the Redlynch Dental team in black uniforms, smiling, including Principal Dentist Dr Alex Bornsztejn on the right',
+  'hero/smiling-mother-and-daughter.webp': 'A smiling mother and young daughter hugging',
   'services/dental-examination.webp': 'A dentist examining a smiling patient’s teeth',
   'services/childrens-dentistry-smiling-girl.webp': 'A smiling young girl in a dental chair',
-  'offers/new-patient-special-offer.webp': OFFER_ALT,
   'blog/dental-implant-crown-illustration.webp': 'Illustration of a dental implant post in the jaw with a crown being lowered onto it',
-  ...Object.fromEntries(Pg.TEAM.map(m => [m.img.replace(/^assets\/images\//, ''), `Portrait of ${m.name}, ${m.role} at Redlynch Dental`])),
-  ...Object.fromEntries(SUPPORT.map(m => [m.img, `Portrait of ${m.name}, ${m.role} at Redlynch Dental`])),
+  ...Object.fromEntries([...Pg.TEAM, ...Pg.SUPPORT].filter(m => m.img).map(m => [rel(m.img), `Portrait of ${m.name}, ${m.role} at Redlynch Dental`])),
 };
 for (const s of services) if (s.img && !out.media[s.img.replace(/^assets\/images\//, '')]) out.media[s.img.replace(/^assets\/images\//, '')] = s.imgAlt;
+for (const [img, alt] of Object.entries(LANDING_ALTS)) if (!out.media[img]) out.media[img] = alt;
 
 /* Menus, as in the static site's header and footer. */
 const svcItems = services.map(s => ({ page: s.slug, label: s.navName }));
@@ -615,13 +759,14 @@ out.menus = {
     { url: '#', label: 'About Us', children: [{ page: 'about', label: 'About Redlynch Dental' }, { page: 'our-team', label: 'Meet Our Team' }, { page: 'new-patients', label: 'New Patients' }] },
     { page: 'services', label: 'Services', classes: 'mega', description: 'Our services', children: svcItems },
     { url: '#', label: 'Patient Info', children: [{ page: 'faq', label: 'Frequently Asked Questions' }, { page: 'special-offers', label: 'New Patient Offer' }, { page: 'emergency-dental-care', label: 'Emergency Dental Care' }, { url: 'rd-booking', label: 'Book Online', target: '_blank' }] },
+    { page: 'payments-and-fees', label: 'Payments & Fees' },
     { page: 'blog', label: 'Blog' },
     { page: 'contact', label: 'Contact Us' },
   ] },
   footer_services: { name: 'Services', items: [...services.filter(s => s.footer).map(s => ({ page: s.slug, label: s.navName })), { page: 'services', label: 'All services →' }] },
   footer_practice: { name: 'Practice', items: [
     { page: 'about', label: 'About Redlynch Dental' }, { page: 'our-team', label: 'Meet Our Team' }, { page: 'new-patients', label: 'New Patients' },
-    { page: 'special-offers', label: 'New Patient Offer' }, { page: 'faq', label: 'FAQs' }, { page: 'blog', label: 'Blog' }, { page: 'contact', label: 'Contact Us' },
+    { page: 'special-offers', label: 'New Patient Offer' }, { page: 'payments-and-fees', label: 'Payments and Fees' }, { page: 'faq', label: 'FAQs' }, { page: 'blog', label: 'Blog' }, { page: 'contact', label: 'Contact Us' },
     { url: 'rd-booking', label: 'Book Online', target: '_blank' },
   ] },
 };

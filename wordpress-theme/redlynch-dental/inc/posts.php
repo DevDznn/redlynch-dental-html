@@ -1,6 +1,6 @@
 <?php
 /**
- * Blog posts: an optional byline (e.g. "Dr Alex Bornsztejn, Principal Dentist") shown on the
+ * Blog posts: an optional byline (e.g. "Dr Nadia Mullins, Associate Dentist") shown on the
  * article and on the Featured Article widget instead of the WordPress author name.
  *
  * @package Redlynch_Dental
@@ -46,7 +46,7 @@ function rd_byline_meta_box_html( $post ) {
 		'<p><label for="rd_byline">%s</label><input type="text" class="widefat" id="rd_byline" name="rd_byline" value="%s"></p><p class="description">%s</p>',
 		esc_html__( 'Written by', 'redlynch-dental' ),
 		esc_attr( (string) get_post_meta( $post->ID, '_rd_byline', true ) ),
-		esc_html__( 'For example "Dr Alex Bornsztejn, Principal Dentist". Leave empty to show the author’s name.', 'redlynch-dental' )
+		esc_html__( 'For example "Dr Nadia Mullins, Associate Dentist". Leave empty to show the author’s name.', 'redlynch-dental' )
 	);
 }
 

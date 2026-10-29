@@ -1,0 +1,136 @@
+/* =========================================================================
+   Redlynch Dental: campaign landing pages (Meta ads)
+   Loaded only by full-arch-dental-implants.html and cosmetic-dentistry.html,
+   on top of style.css. Every rule is scoped to body.lp, so the regular
+   service pages are untouched. Uses the tokens defined in style.css.
+   ========================================================================= */
+
+/* ---------- Hero ---------- */
+.lp .lp-hero{padding:clamp(40px,6vw,84px) 0 clamp(48px,6vw,84px)}
+.lp .lp-hero h1{font-size:clamp(2.1rem,4vw,3.3rem);text-wrap:balance;margin-bottom:.4em}
+.lp .lp-hero .lead{margin-bottom:0}
+.lp .lp-hero-actions{margin-top:28px}
+.lp .lp-hero .hero-meta{margin-top:22px}
+.lp .lp-hero .ph-img{aspect-ratio:5/4}
+
+/* ---------- Section rhythm: landing pages run a little tighter ---------- */
+.lp main>section:not(.lp-hero):not(.cta){padding:clamp(56px,7vw,92px) 0}
+.lp main>section.lp-foot{padding:clamp(28px,4vw,40px) 0}
+
+/* ---------- "Is this you?" cards ---------- */
+.lp .lp-cards{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.lp .lp-cards.c3{grid-template-columns:repeat(3,1fr)}
+.lp .lp-cards li{background:var(--cream);border-radius:var(--r);padding:var(--card-pad);display:flex;flex-direction:column;gap:14px}
+.lp .bg-paper .lp-cards li,.lp .lp-cards.on-paper li{background:var(--cream)}
+.lp .lp-cards.on-cream li{background:var(--paper);border:1px solid var(--line)}
+.lp .lp-cards .ic{width:46px;height:46px;border-radius:14px;background:var(--lime-wash);color:var(--forest);display:grid;place-items:center;flex:none}
+.lp .lp-cards .ic svg{width:24px;height:24px}
+.lp .lp-cards h3{font-size:1.15rem;margin:0}
+.lp .lp-cards p{margin:0;color:var(--muted);font-size:.96rem;line-height:1.6}
+.lp .lp-cards p b{color:var(--ink)}
+
+/* Cosmetic: five treatment cards as a 3 + 2 grid */
+.lp .lp-options{grid-template-columns:repeat(6,1fr)}
+.lp .lp-options li{grid-column:span 2}
+.lp .lp-options li:nth-child(n+4){grid-column:span 3}
+
+/* ---------- Cosmetic: concern → options matcher ---------- */
+.lp .lp-match{list-style:none;padding:0;margin:0;display:grid}
+.lp .lp-match li{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:8px 28px;padding:20px 0;border-top:1px solid var(--line)}
+.lp .lp-match li:last-child{border-bottom:1px solid var(--line)}
+.lp .lp-match b{font:500 1.22rem/1.3 var(--f-display);color:var(--ink)}
+.lp .lp-match span{color:var(--muted);line-height:1.6}
+
+/* ---------- Explainer with key facts ---------- */
+.lp .lp-facts{list-style:none;padding:0;margin:26px 0 0;display:grid;gap:0}
+.lp .lp-facts li{display:grid;grid-template-columns:124px 1fr;gap:18px;align-items:baseline;padding:16px 0;border-top:1px solid var(--line)}
+.lp .lp-facts li:last-child{border-bottom:1px solid var(--line)}
+.lp .lp-facts b{font:500 1.55rem/1.1 var(--f-display);color:var(--moss)}
+.lp .lp-facts span{color:var(--text)}
+.lp .lp-photo{border-radius:var(--r-lg);overflow:hidden;box-shadow:var(--shadow);aspect-ratio:4/3;margin:0}
+.lp .lp-photo img{width:100%;height:100%;object-fit:cover}
+
+/* ---------- Treatment steps ---------- */
+.lp .lp-steps{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(3,1fr);gap:16px;counter-reset:s}
+.lp .lp-steps.s4{grid-template-columns:repeat(4,1fr)}
+.lp .lp-steps li{counter-increment:s;background:var(--cream);border-radius:var(--r);padding:var(--card-pad);position:relative}
+.lp .lp-steps li::before{content:counter(s);display:grid;place-items:center;width:44px;height:44px;border-radius:50%;background:var(--lime);color:var(--ink);font:500 1.25rem/1 var(--f-display);margin-bottom:16px}
+.lp .lp-steps h3{font-size:1.18rem;margin-bottom:6px}
+.lp .lp-steps p{margin:0;color:var(--muted);font-size:.96rem;line-height:1.6}
+
+/* Inline call to action between sections */
+.lp .lp-inline-cta{margin-top:28px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px 28px;background:var(--ink);color:#C9D4CD;border-radius:var(--r);padding:22px clamp(20px,3vw,32px)}
+.lp .lp-inline-cta p{margin:0;max-width:620px}
+.lp .lp-inline-cta strong{color:#fff;font-family:var(--f-display);font-weight:500;font-size:1.25rem;display:block;margin-bottom:2px}
+
+/* ---------- Suitability and considerations ---------- */
+.lp .lp-panel{background:var(--paper);border:1px solid var(--line);border-radius:var(--r-lg);padding:clamp(24px,3vw,36px)}
+.lp .lp-panel h2,.lp .lp-panel h3{margin-top:0}
+.lp .lp-list{list-style:none;padding:0;margin:0;display:grid;gap:0}
+.lp .lp-list li{padding:14px 0;border-top:1px solid var(--line);line-height:1.6}
+.lp .lp-list li:first-child{border-top:0;padding-top:0}
+.lp .lp-list li:last-child{padding-bottom:0}
+.lp .lp-list b{display:block;color:var(--ink);margin-bottom:2px}
+.lp .lp-list span{color:var(--muted);font-size:.96rem}
+.lp .prose-tight p{max-width:640px}
+.lp .split>.sec-head{margin-bottom:0}
+
+/* ---------- Cost band ---------- */
+.lp .lp-cost .ticks{margin:0}
+.lp .lp-cost .ticks li{color:#E3EBE5}
+.lp .lp-cost .lp-panel{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.14);color:#C9D4CD}
+.lp .lp-cost .lp-panel h3{color:#fff}
+
+/* ---------- Booking section ---------- */
+.lp .lp-book{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:clamp(24px,4vw,48px);align-items:start}
+.lp .lp-book .side-box{padding:clamp(24px,3vw,34px)}
+.lp .lp-book .side-box h3{font-size:1.45rem}
+.lp .lp-book .side-box .btn{width:100%}
+.lp .lp-book .side-box .btn+.btn{margin-top:10px}
+.lp .lp-book .ticks{margin:18px 0 22px}
+.lp .lp-book .ticks li{color:#DDE5DF;font-size:.95rem}
+.lp .lp-book-meta{margin:22px 0 0;padding:18px 0 0;border-top:1px solid rgba(255,255,255,.14);font-size:.92rem;line-height:1.6}
+.lp .lp-book-meta p{margin:0 0 10px}
+.lp .lp-book-meta p:last-child{margin:0}
+.lp .lp-book-meta a{color:var(--lime)}
+.lp .lp-book .form{background:var(--cream);box-shadow:none}
+.lp .lp-book .field input,.lp .lp-book .field textarea{background:var(--paper)}
+.lp .lp-book .form h3{font-size:1.5rem;margin-bottom:6px}
+
+/* ---------- Footnote: risk statement + quiet link to the general page ---------- */
+.lp .lp-foot .wrap{display:flex;flex-wrap:wrap;gap:8px 32px;align-items:baseline;justify-content:space-between}
+.lp .lp-foot .risk{margin:0;max-width:760px}
+.lp .lp-foot .text-link{font-size:.92rem}
+.lp .lp-foot .lp-more{margin:0}
+.lp .prose-tight .lp-photo{margin-top:28px;aspect-ratio:16/9}
+
+/* ---------- Responsive ---------- */
+@media (max-width:1100px){
+  .lp .lp-cards,.lp .lp-steps.s4{grid-template-columns:repeat(2,1fr)}
+  .lp .lp-options li,.lp .lp-options li:nth-child(n+4){grid-column:auto}
+  .lp .lp-options li:last-child{grid-column:1/-1}
+}
+@media (max-width:1020px){
+  .lp .lp-hero .ph-img{aspect-ratio:16/9;max-height:360px}
+  .lp .lp-steps{grid-template-columns:repeat(2,1fr)}
+  .lp .lp-cards.c3{grid-template-columns:repeat(2,1fr)}
+  .lp .lp-book{grid-template-columns:1fr}
+  .lp .lp-photo{aspect-ratio:16/9}
+}
+@media (max-width:700px){
+  .lp .lp-hero{padding-top:32px}
+  .lp .lp-hero .ph-img{aspect-ratio:16/10;max-height:240px}
+  .lp .lp-hero-actions .btn{flex:1 1 100%}
+  .lp .lp-hero .hero-meta li{font-size:.8rem;padding:6px 12px}
+  .lp .lp-cards,.lp .lp-cards.c3,.lp .lp-steps,.lp .lp-steps.s4{grid-template-columns:1fr}
+  .lp .lp-steps li{display:grid;grid-template-columns:44px 1fr;gap:4px 16px;align-items:start}
+  .lp .lp-steps li::before{margin:0;grid-row:span 2}
+  .lp .lp-steps h3{margin:10px 0 4px}
+  .lp .lp-cards li{flex-direction:row;align-items:flex-start}
+  .lp .lp-cards li>div{min-width:0}
+  .lp .lp-inline-cta .btn{width:100%}
+  .lp .lp-facts li{grid-template-columns:1fr;gap:2px}
+  .lp .lp-match li{grid-template-columns:1fr;gap:4px;padding:16px 0}
+  .lp .lp-options li:last-child{grid-column:auto}
+  .lp .cta .actions .btn{flex:1 1 100%}
+}

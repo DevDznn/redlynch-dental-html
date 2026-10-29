@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "redlynch",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["C:/Users/KD/AppData/Local/Temp/claude/C--Users-KD-Dental-redlynch-dental-html/f7f16e4e-452c-4dfa-878e-be8c73111380/scratchpad/serve.js", "C:/Users/KD/Dental/redlynch-dental-html", "8731"],
+      "port": 8731
+    },
+    {
+      "name": "south-cairns",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["C:/Users/KD/AppData/Local/Temp/claude/C--Users-KD-Dental-redlynch-dental-html/f7f16e4e-452c-4dfa-878e-be8c73111380/scratchpad/serve.js", "C:/Users/KD/Dental/south-cairns-dental", "8732"],
+      "port": 8732
+    }
+  ]
+}

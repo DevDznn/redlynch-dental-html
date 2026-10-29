@@ -1,13 +1,14 @@
 <?php
 /**
  * Appearance › Redlynch setup: imports the website from inc/import/content.json (generated from the
- * static site by wordpress-theme/tools/build-content.js): 25 pages as Elementor layouts, the blog
+ * static site by wordpress-theme/tools/build-content.js): 28 pages as Elementor layouts, the blog
  * article, the team profiles, the images (into the Media Library, with their alternative text),
  * the three menus, the logo, the homepage setting and, if ThinkRank is active, each page's SEO
  * title and description. Also available as a WP-CLI command: wp redlynch import.
  *
  * Safe to run more than once: pages, posts, team members and images are matched by slug or source
  * file and reused; existing pages are left alone unless "replace" is ticked; nothing is deleted.
+ * Team members who have left the practice (listed in the content file) are moved to Drafts.
  *
  * @package Redlynch_Dental
  */
@@ -77,7 +78,7 @@ function rd_setup_page() {
 			<li><?php echo $thinkrank ? '&#10003; ' : '&#10007; '; ?><strong>ThinkRank</strong> — <?php $thinkrank ? esc_html_e( 'active. Each page’s SEO title and description from the static site are copied into its ThinkRank fields (only where empty), and the privacy page is set to noindex.', 'redlynch-dental' ) : esc_html_e( 'not active. Activate it before importing so each page’s SEO title and description are filled in.', 'redlynch-dental' ); ?></li>
 		</ul>
 		<h2><?php esc_html_e( 'Import the website', 'redlynch-dental' ); ?></h2>
-		<p><?php esc_html_e( 'Creates the homepage, About, Meet Our Team, New Patients, Services, the 15 treatment pages, FAQs, Blog, Contact, the New Patient Offer and the privacy policy as Elementor pages; the blog article; the five team profiles; the images in the Media Library; the main and footer menus; and the logo.', 'redlynch-dental' ); ?></p>
+		<p><?php esc_html_e( 'Creates the homepage, About, Meet Our Team, New Patients, Services, the 15 treatment pages, FAQs, Blog, Contact, the New Patient Offer, Payments and Fees, the privacy policy and two campaign landing pages as Elementor pages; the blog article; the six team profiles (profiles of people who have left are moved to Drafts); the images in the Media Library; the main and footer menus; and the logo.', 'redlynch-dental' ); ?></p>
 		<form method="post">
 			<?php wp_nonce_field( 'rd_import' ); ?>
 			<p><label><input type="checkbox" name="rd_menus" value="1" checked> <?php esc_html_e( 'Create the main and footer menus and assign them', 'redlynch-dental' ); ?></label></p>
@@ -116,8 +117,9 @@ function rd_run_import( $opts ) {
 	if ( function_exists( 'set_time_limit' ) ) {
 		set_time_limit( 300 ); // phpcs:ignore Squiz.PHP.DiscouragedFunctions.Discouraged -- one-off import of ~30 images.
 	}
-	$imp = new RD_Importer( $site['media'] ?? array() );
-	$log = array();
+	$imp          = new RD_Importer( $site['media'] ?? array() );
+	$imp->replace = (bool) $opts['replace'];
+	$log          = array();
 
 	if ( $opts['permalinks'] && '' === get_option( 'permalink_structure' ) ) {
 		global $wp_rewrite;
@@ -162,12 +164,17 @@ function rd_run_import( $opts ) {
 		$log[] = sprintf( __( 'Left unchanged (they existed before the import; tick “Replace” to overwrite): %s', 'redlynch-dental' ), implode( ', ', $skipped ) );
 	}
 
-	// 3. Team.
+	// 3. Team: current members, then former members out of view (Drafts, not deleted).
 	foreach ( $site['team'] as $m ) {
 		$imp->ensure_team_member( $m );
 	}
 	/* translators: %d: number of profiles. */
-	$log[] = sprintf( __( 'Team profiles: %d.', 'redlynch-dental' ), count( $site['team'] ) );
+	$log[]   = sprintf( __( 'Team profiles: %d.', 'redlynch-dental' ), count( $site['team'] ) );
+	$retired = $imp->retire_team_members( $site['retired_team'] ?? array() );
+	if ( $retired ) {
+		/* translators: %s: names. */
+		$log[] = sprintf( __( 'Moved to Drafts (no longer at the practice): %s.', 'redlynch-dental' ), implode( ', ', $retired ) );
+	}
 
 	// 4. Menus.
 	if ( $opts['menus'] ) {
@@ -241,6 +248,13 @@ class RD_Importer {
 	 * @var array<string,int>
 	 */
 	public $post_ids = array();
+
+	/**
+	 * Whether existing imported content is refreshed ("replace" ticked).
+	 *
+	 * @var bool
+	 */
+	public $replace = false;
 
 	/**
 	 * Attachment IDs by source path.
@@ -317,7 +331,9 @@ class RD_Importer {
 				'post_content' => '',
 			)
 		);
-		update_post_meta( $id, '_wp_page_template', 'default' );
+		// Campaign landing pages use the landing template (body.lp and landing.css); others the default.
+		$template = ( $page['template'] ?? '' ) === 'page-templates/landing.php' ? 'page-templates/landing.php' : 'default';
+		update_post_meta( $id, '_wp_page_template', $template );
 		update_post_meta( $id, '_elementor_edit_mode', 'builder' );
 		update_post_meta( $id, '_elementor_template_type', 'wp-page' );
 		update_post_meta( $id, '_elementor_version', defined( 'ELEMENTOR_VERSION' ) ? ELEMENTOR_VERSION : '3.0.0' );
@@ -349,12 +365,24 @@ class RD_Importer {
 	 * @param array $seo Title, description, noindex.
 	 */
 	public function seo( $id, $seo ) {
-		if ( ! empty( $seo['title'] ) && '' === (string) get_post_meta( $id, '_thinkrank_seo_title', true ) ) {
-			update_post_meta( $id, '_thinkrank_seo_title', $seo['title'] );
+		// The values written last time, so an untouched title or description can be updated while
+		// one edited in ThinkRank is kept.
+		$prev = json_decode( (string) get_post_meta( $id, '_rd_seo_imported', true ), true );
+		$prev = is_array( $prev ) ? $prev : array();
+		foreach ( array(
+			'title'       => '_thinkrank_seo_title',
+			'description' => '_thinkrank_meta_description',
+		) as $field => $key ) {
+			if ( empty( $seo[ $field ] ) ) {
+				continue;
+			}
+			$current = (string) get_post_meta( $id, $key, true );
+			if ( '' === $current || ( isset( $prev[ $field ] ) && $prev[ $field ] === $current ) ) {
+				update_post_meta( $id, $key, wp_slash( $seo[ $field ] ) );
+				$prev[ $field ] = $seo[ $field ];
+			}
 		}
-		if ( ! empty( $seo['description'] ) && '' === (string) get_post_meta( $id, '_thinkrank_meta_description', true ) ) {
-			update_post_meta( $id, '_thinkrank_meta_description', $seo['description'] );
-		}
+		update_post_meta( $id, '_rd_seo_imported', wp_slash( wp_json_encode( $prev ) ) );
 		if ( ! empty( $seo['noindex'] ) && '' === (string) get_post_meta( $id, '_thinkrank_robots_meta', true ) ) {
 			update_post_meta( $id, '_thinkrank_robots_meta_enabled', 1 );
 			update_post_meta(
@@ -383,6 +411,9 @@ class RD_Importer {
 		$existing = get_page_by_path( $post['slug'], OBJECT, 'post' );
 		if ( $existing ) {
 			$id = (int) $existing->ID;
+			if ( $this->replace && get_post_meta( $id, '_rd_imported', true ) ) {
+				update_post_meta( $id, '_rd_byline', $post['byline'] );
+			}
 		} else {
 			$cat = term_exists( $post['category'], 'category' );
 			if ( ! $cat ) {
@@ -442,6 +473,10 @@ class RD_Importer {
 			)
 		);
 		if ( $found ) {
+			// "Replace" refreshes the imported details; the photo is only added if there is none.
+			if ( $this->replace ) {
+				$this->fill_team_member( (int) $found[0], $m );
+			}
 			return;
 		}
 		$id = wp_insert_post(
@@ -457,6 +492,25 @@ class RD_Importer {
 		if ( is_wp_error( $id ) ) {
 			return;
 		}
+		$this->fill_team_member( $id, $m );
+	}
+
+	/**
+	 * Write a team member's details and photo.
+	 *
+	 * @param int   $id Team member.
+	 * @param array $m  Member data.
+	 */
+	private function fill_team_member( $id, $m ) {
+		wp_update_post(
+			array(
+				'ID'           => $id,
+				'post_status'  => 'publish',
+				'post_title'   => $m['name'],
+				'post_content' => implode( "\n\n", $m['bio'] ),
+				'menu_order'   => (int) $m['order'],
+			)
+		);
 		update_post_meta( $id, '_rd_group', $m['group'] );
 		update_post_meta( $id, '_rd_role', $m['role'] );
 		update_post_meta( $id, '_rd_quals', $m['quals'] );
@@ -465,9 +519,41 @@ class RD_Importer {
 		update_post_meta( $id, '_rd_focus', implode( "\n", $m['focus'] ) );
 		update_post_meta( $id, '_rd_anchor', $m['anchor'] );
 		$img = $this->media( $m['img'] );
-		if ( $img ) {
+		if ( $img && ! has_post_thumbnail( $id ) ) {
 			set_post_thumbnail( $id, $img );
 		}
+	}
+
+	/**
+	 * Move the profiles of people who have left the practice to Drafts (they are not deleted).
+	 *
+	 * @param string[] $anchors Their link anchors.
+	 * @return string[] Names moved.
+	 */
+	public function retire_team_members( $anchors ) {
+		$moved = array();
+		foreach ( (array) $anchors as $anchor ) {
+			$ids = get_posts(
+				array(
+					'post_type'   => 'rd_team',
+					'post_status' => 'publish',
+					'numberposts' => -1,
+					'meta_key'    => '_rd_anchor', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- one-off import.
+					'meta_value'  => $anchor, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
+					'fields'      => 'ids',
+				)
+			);
+			foreach ( $ids as $id ) {
+				wp_update_post(
+					array(
+						'ID'          => $id,
+						'post_status' => 'draft',
+					)
+				);
+				$moved[] = get_the_title( $id );
+			}
+		}
+		return $moved;
 	}
 
 	/**

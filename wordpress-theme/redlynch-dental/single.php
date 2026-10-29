@@ -4,7 +4,7 @@
  * featured image; then the call-to-action band. Same layout as the static site's article page.
  *
  * The byline uses the post's "Byline" field (Post › Byline box) when set, e.g.
- * "Dr Alex Bornsztejn, Principal Dentist", otherwise the author's display name.
+ * "Dr Nadia Mullins, Associate Dentist", otherwise the author's display name.
  *
  * @package Redlynch_Dental
  */

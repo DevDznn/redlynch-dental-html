@@ -3,7 +3,8 @@
  * Styles, scripts and fonts. Everything is served from the theme: no Google Fonts, no CDN.
  *
  * Load order: Elementor's CSS → wp-base.css (resets Elementor/WordPress defaults) → site.css
- * (the static site's stylesheet, unchanged) → wp.css (WordPress menus and Elementor containers).
+ * (the static site's stylesheet, unchanged) → landing.css (campaign landing pages only, also
+ * unchanged) → wp.css (WordPress menus and Elementor containers).
  * Loading after Elementor lets the site's rules win where both set the same property.
  *
  * @package Redlynch_Dental
@@ -30,7 +31,13 @@ function rd_enqueue_assets() {
 	$deps = wp_style_is( 'elementor-frontend', 'enqueued' ) ? array( 'elementor-frontend' ) : array();
 	wp_enqueue_style( 'rd-base', RD_THEME_URI . '/assets/css/wp-base.css', $deps, rd_asset_ver( 'assets/css/wp-base.css' ) );
 	wp_enqueue_style( 'rd-site', RD_THEME_URI . '/assets/css/site.css', array( 'rd-base' ), rd_asset_ver( 'assets/css/site.css' ) );
-	wp_enqueue_style( 'rd-wp', RD_THEME_URI . '/assets/css/wp.css', array( 'rd-site' ), rd_asset_ver( 'assets/css/wp.css' ) );
+	$wp_deps = array( 'rd-site' );
+	if ( rd_is_landing_page() ) {
+		// Campaign landing pages: the static site's landing.css, scoped to body.lp.
+		wp_enqueue_style( 'rd-landing', RD_THEME_URI . '/assets/css/landing.css', array( 'rd-site' ), rd_asset_ver( 'assets/css/landing.css' ) );
+		$wp_deps[] = 'rd-landing';
+	}
+	wp_enqueue_style( 'rd-wp', RD_THEME_URI . '/assets/css/wp.css', $wp_deps, rd_asset_ver( 'assets/css/wp.css' ) );
 
 	wp_enqueue_script(
 		'rd-main',

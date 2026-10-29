@@ -2,7 +2,7 @@
    "From the practice" blocks restate the practice's own description of each service.
    Treatment suitability always depends on an individual clinical assessment. */
 'use strict';
-const { F, RISK, ico, callBtn, bookBtn } = require('./lib');
+const { F, RISK, ico, callBtn, bookBtn, ARROW } = require('./lib');
 
 const IMG = 'assets/images/services/';
 const HD = 'https://www.healthdirect.gov.au/';
@@ -81,15 +81,15 @@ ${fp(`<p>At Redlynch Dental, we welcome all new patients of all ages. If you are
   img: IMG + 'childrens-dentistry-smiling-girl.webp', imgAlt: 'A smiling young girl sitting in a dental chair',
   short: 'Positive early experiences, gentle care and early detection, so children grow up comfortable at the dentist.',
   title: 'Children’s Dentist Redlynch | Kids Dentistry Cairns | Redlynch Dental',
-  desc: 'Gentle children’s dentistry in Redlynch, Cairns. Fun, positive early visits, preventive care and early treatment. Ask about free kids dentistry. Call Redlynch Dental on (07) 4039 4720.',
+  desc: 'Gentle children’s dentistry in Redlynch, Cairns. Fun, positive early visits, preventive care and early treatment. CDBS bulk billing for eligible children. Call Redlynch Dental on (07) 4039 4720.',
   eyebrow: 'Family dentistry', h1: 'Children’s dentistry', lead: 'Your child’s early experiences at the dentist shape how they feel about dental care for life. We keep visits calm, positive and fun.',
   body: () => `
 ${fp(`<p>Your child’s early experiences at the dentist are so important in shaping their future attitude towards their dental health. Fun, positive early experiences are the best way to make sure your child doesn’t develop unnecessary long-term dental fears.</p><p>Early diagnosis and treatment of any problems with your child’s teeth can help reduce the time and money needed to fix them, and prevent unnecessary discomfort.</p>`)}
-<div class="callout"><p><strong>Free kids dentistry.</strong> Redlynch Dental offers free kids dentistry. Eligibility and what is included can vary, so please ask our team about your child’s situation when you book.</p></div>
+<div class="callout"><p><strong>Bulk billing for eligible children.</strong> Redlynch Dental bulk bills eligible children under the Child Dental Benefits Schedule (CDBS). Not every child is eligible, so please ask our team about your child’s situation when you book. See <a href="payments-and-fees.html">payments and fees</a>.</p></div>
 <h2>Making the first visits easy</h2>
 ${cards([
   ['smile', 'Start early', 'Bringing children in early, before there is a problem, means their first experiences of the dental chair are relaxed and positive.'],
-  ['heart', 'Gentle, patient care', 'Dr Julian Fung has a particular passion for working with children and for easing dental fears in patients of all ages.'],
+  ['heart', 'Gentle, patient care', 'We take things slowly and explain each step in child-friendly language, so children feel at ease.'],
   ['film', 'Distraction helps', 'Let us know what music your child likes, or choose a movie to watch during their appointment.'],
   ['users', 'Parents are part of it', 'You’re welcome to stay with your child, ask questions and take home practical tips for brushing at home.'],
 ])}
@@ -105,7 +105,7 @@ ${cards([
 <p>Baby teeth matter. They help children chew, speak and smile with confidence, and they hold space for the adult teeth that follow.</p>`,
   faqs: [
     ['When should my child first see a dentist?', 'Children should see a dentist by the time their first tooth appears, or by their first birthday. Early visits help problems be spotted early and make the dental chair familiar. Call us to book.'],
-    ['Is children’s dentistry free?', 'Redlynch Dental offers free kids dentistry. Please ask our team about eligibility and what is included when you book, so you know what to expect before the visit.'],
+    ['Do you bulk bill children?', 'Yes, for eligible children. Redlynch Dental bulk bills eligible children under the Child Dental Benefits Schedule (CDBS). Please ask our team about your child’s eligibility when you book, so you know what to expect before the visit.'],
     ['What if my child is nervous?', 'That’s common. Tell us when you book. We take things slowly, explain each step in child-friendly language, and can play music or a movie to help them relax.'],
     ['Do baby teeth really need fillings?', 'Decay in baby teeth can cause pain and infection, and can affect the adult teeth developing underneath. Your dentist will explain the options for your child’s situation.'],
   ],
@@ -129,7 +129,7 @@ ${fp(`<p>In a similar way to false fingernails, veneers are thin shells of porce
  <div class="card"><h3>Chips and wear</h3><p>Front teeth that are chipped, short or worn down over time.</p></div>
  <div class="card"><h3>Shape and proportion</h3><p>Teeth that are small, oddly shaped or out of proportion with the rest of your smile.</p></div>
 </div>
-<p class="mt-2">Veneers aren’t the right answer for everyone. Teeth need to be healthy, and active decay or gum disease must be treated first. Your dentist may also suggest alternatives such as <a href="teeth-whitening.html">whitening</a>, tooth-coloured bonding, <a href="invisalign.html">Invisalign®</a> or <a href="crowns-and-bridges.html">crowns</a>, depending on your goals.</p>
+<p class="mt-2">Veneers aren’t the right answer for everyone. Teeth need to be healthy, and active decay or gum disease must be treated first. Your dentist may also suggest alternatives such as <a href="teeth-whitening.html">whitening</a>, tooth-coloured bonding, <a href="invisalign.html">clear aligners</a> or <a href="crowns-and-bridges.html">crowns</a>, depending on your goals.</p><div class="callout"><h3>Not sure veneers are the right option?</h3><p>Compare whitening, composite bonding, porcelain veneers, clear aligners and crowns, with what each involves and costs, and book a cosmetic consultation.</p><a class="btn sm" href="cosmetic-dentistry.html">Cosmetic dentistry options ${ARROW}</a></div>
 <h2>The treatment process</h2>
 <p>Treatment usually takes two appointments.</p>
 ${steps([
@@ -148,7 +148,7 @@ ${steps([
     ['How long do veneers last?', 'Veneers can last many years with good care, but they are not permanent. How long they last depends on the material, your bite, your habits and how well you look after them. Your dentist can talk through what to expect for your situation.'],
     ['Will my teeth need to be shaved down?', 'Often a small amount of enamel is removed so the veneers sit naturally. Using magnification and high-quality porcelain helps keep this to a minimum, and in some cases none is needed. Your dentist will explain what is planned for your teeth before you begin.'],
     ['Do veneers look natural?', 'Veneers are custom-made for your smile, with the shade and shape planned with you, so they can look very natural.'],
-    ['Who can I see for veneers?', 'Dr Alex Bornsztejn lists crowns, veneers and smile makeovers among his areas of expertise, and Dr Nadia Mullins has a special interest in cosmetic dentistry.'],
+    ['Who can I see for veneers?', 'Dr Nadia Mullins has a special interest in cosmetic dentistry. Our team can help you book with the right dentist.'],
   ],
   related: ['teeth-whitening', 'crowns-and-bridges', 'invisalign'],
   sources: ['veneers', 'adaCrowns'],
@@ -203,7 +203,7 @@ ${steps([
   eyebrow: 'Tooth replacement', h1: 'Dental implants', lead: 'One of the most natural and long-lasting ways to replace missing teeth. Implant-supported teeth are fixed in place and look, feel and function like natural teeth.',
   heroMeta: ['Complimentary implant consultation', '3D X-ray planning', 'Computer-guided placement'],
   body: () => `
-${fp(`<p>People who have lost teeth may feel self-conscious about smiling or talking. Chewing difficulties caused by tooth loss can also affect eating habits, which can lead to other health problems.</p><p>Dental implants offer a proven way to replace missing teeth. The resulting tooth or teeth are fixed in place and non-removable.</p>`)}
+${fp(`<p>People who have lost teeth may feel self-conscious about smiling or talking. Chewing difficulties caused by tooth loss can also affect eating habits, which can lead to other health problems.</p><p>Dental implants offer a well-established way to replace missing teeth. The resulting tooth or teeth are fixed in place and non-removable.</p>`)}
 <h2>What is a dental implant?</h2>
 <p>A dental implant is a small titanium post placed in the jawbone, where it acts like a tooth root. Once it has healed and bonded with the bone, it supports a crown, a bridge or a denture. Unlike a bridge, a single implant doesn’t rely on the neighbouring teeth for support.</p>
 <h2>Why people choose implants</h2>
@@ -216,13 +216,16 @@ ${cards([
 <h2>The implant process at Redlynch Dental</h2>
 ${steps([
   ['Treatment plan', 'Call us to book your complimentary implant consultation. We assess your suitability, take moulds of your teeth and a 3D X-ray, and go through your treatment plan and costs in detail.'],
-  ['The implant is placed', 'The implant is placed under local anaesthetic, and we make sure you are completely numb before starting. Placement is computer-guided for a high level of accuracy. Many patients tell us it was easier than they expected.'],
+  ['The implant is placed', 'The implant is placed under local anaesthetic, and we make sure you are completely numb before starting. Placement is computer-guided for a high level of accuracy.'],
   ['The tooth is fitted', 'Once the implant has healed and settled, usually after about three months, your permanent tooth is fitted on top.'],
 ])}
 <div class="callout info mt-2"><p><strong>Is everyone suitable?</strong> Not always. Suitability depends on things like the amount and quality of bone, gum health, general health, smoking and some medications. Your 3D X-ray and consultation will show whether implants are right for you, and what the alternatives are.</p></div>
 <h2>Implants for dentures</h2>
-<p>Implants can also be used to anchor a denture so it doesn’t rock or slip. If you are tired of a loose denture, ask about implant-retained options. See <a href="dentures.html">dentures</a>.</p>
-<p>Dr Alex Bornsztejn, our Principal Dentist, lists implant dentistry among his areas of expertise and has travelled to learn the latest techniques in dental implants.</p>
+<p>Implants can also be used to anchor a denture so it doesn’t rock or slip. If you are tired of a loose denture, ask about implant-retained options. See <a href="dentures.html">dentures</a>.</p><div class="callout"><h3>Replacing all the teeth in one jaw?</h3><p>Full arch dental implants support a complete set of fixed teeth that are not taken out at night. See how treatment works, how costs are worked out and how to book a consultation.</p><a class="btn sm" href="full-arch-dental-implants.html">Full arch dental implants ${ARROW}</a></div>
+<h2>Who provides implant treatment</h2>
+<p>At Redlynch Dental, Dr Nadia Mullins places single dental implants. Dr Max Ryu and Dr Louis Fernandez provide full arch implant treatment.</p>
+<h2>Costs and payment</h2>
+<p>Implant costs depend on your treatment, so they are set out in your individual treatment plan after your consultation. Payment options include ${F.payList}. See <a href="payments-and-fees.html">payments and fees</a>.</p>
 <p class="risk">${RISK}</p>`,
   faqs: [
     ['Is the implant consultation really free?', 'The practice offers a complimentary implant consultation to assess your suitability and go through your treatment plan and costs. Any X-rays or further treatment are discussed with you first.'],
@@ -383,16 +386,15 @@ ${steps([
   sources: ['fillings', 'decay', 'adaFillings'],
 },
 {
-  slug: 'invisalign', navName: 'Invisalign®', name: 'Invisalign® Clear Aligners', icon: 'aligner', cat: 'cosmetic', footer: true,
+  slug: 'invisalign', navName: 'Clear Aligners', name: 'Clear Aligners', icon: 'aligner', cat: 'cosmetic', footer: true,
   img: IMG + 'clear-aligners.webp', imgAlt: 'Clear plastic aligner trays on a light background',
-  short: 'Clear, removable aligners that straighten teeth gradually. Assessed by an Invisalign®-trained dentist.',
-  title: 'Invisalign® Redlynch & Cairns | Clear Aligners | Redlynch Dental',
-  desc: 'Invisalign® clear aligners at Redlynch Dental, Cairns. Suitability assessment with an Invisalign®-trained dentist, time frames and costs explained. Call (07) 4039 4720.',
-  eyebrow: 'Teeth straightening', h1: 'Invisalign® clear aligners', lead: 'A series of clear, removable trays that gradually move your teeth into position. In suitable cases, Invisalign® can achieve results similar to traditional braces.',
+  short: 'Clear, removable aligners that straighten teeth gradually, after a suitability assessment with our dentists.',
+  title: 'Clear Aligners Redlynch & Cairns | Teeth Straightening | Redlynch Dental',
+  desc: 'Clear aligners at Redlynch Dental, Cairns. Suitability assessment with our dentists, with time frames and costs explained before treatment. Call (07) 4039 4720.',
+  eyebrow: 'Teeth straightening', h1: 'Clear aligners', lead: 'A series of clear, removable trays that gradually move your teeth into position. In suitable cases, clear aligners can achieve results similar to traditional braces.',
   body: () => `
-${fp(`<p>Invisalign® is an orthodontic system that straightens and aligns your teeth, often giving a result similar to traditional metal braces. A series of clear plastic trays is fitted to your teeth and changed every two weeks, with each tray moving your teeth closer to their final position.</p>`)}
-<figure><img src="${IMG}invisalign-banner.webp" alt="A close-up of a smile beside the Invisalign logo and the words ‘The clear alternative to braces’" width="800" height="350" loading="lazy" decoding="async"></figure>
-<h2>Advantages of Invisalign®</h2>
+${fp(`<p>Clear aligner treatment straightens and aligns your teeth, often giving a result similar to traditional metal braces. A series of clear plastic trays is fitted to your teeth and changed every two weeks, with each tray moving your teeth closer to their final position.</p>`)}
+<h2>Advantages of clear aligners</h2>
 ${cards([
   ['smile', 'Discreet', 'Virtually invisible compared with traditional metal braces.'],
   ['check', 'Removable', 'Taken out for up to two hours a day, so you can eat your normal foods and brush and floss as usual.'],
@@ -401,17 +403,17 @@ ${cards([
 ])}
 <h2>How it works</h2>
 ${steps([
-  ['Assessment', 'A detailed examination with our Invisalign®-trained dentist to check suitability and talk through your goals, time frames and costs.'],
-  ['Records', 'X-rays, photos and moulds of your teeth are sent to the Invisalign® laboratory to plan your treatment.'],
+  ['Assessment', 'A detailed examination with one of our dentists to check suitability and talk through your goals, time frames and costs.'],
+  ['Records', 'X-rays, photos and moulds of your teeth are sent to the aligner laboratory to plan your treatment.'],
   ['Aligners', 'You usually start wearing your trays within a few weeks, changing to the next set every two weeks.'],
   ['Retention', 'Once treatment is complete, retainers hold your teeth in their new position.'],
 ], 4)}
 <div class="callout"><p><strong>Results depend on wearing your aligners.</strong> Aligners only move teeth while they are in your mouth, so they need to be worn for most of the day and night, as your dentist instructs.</p></div>`,
   faqs: [
-    ['Can I get Invisalign®?', 'Many people are good candidates, but Invisalign® doesn’t suit everyone. Your Invisalign®-trained dentist will assess your individual needs. In some cases you may need traditional braces or a referral to a specialist orthodontist.'],
-    ['How long does Invisalign® take?', 'It depends on your needs. Some minor cases can take as little as seven weeks, but average treatment time is usually around 12 to 18 months.'],
+    ['Can I have clear aligners?', 'Many people are good candidates, but clear aligners don’t suit everyone. Your dentist will assess your individual needs. In some cases you may need traditional braces or a referral to a specialist orthodontist.'],
+    ['How long does clear aligner treatment take?', 'It depends on your needs. Some minor cases can take as little as seven weeks, but average treatment time is usually around 12 to 18 months.'],
     ['What happens when I finish?', 'You need to commit to keeping your new smile. This can mean clear retainers, a wire bonded to the inside of your teeth, or both. Without retention, teeth tend to move back towards where they started.'],
-    ['How do I get started?', 'Your first visit is a detailed examination to check suitability and discuss time frames and costs. From there we take X-rays, photos and moulds to send to the Invisalign® lab.'],
+    ['How do I get started?', 'Your first visit is a detailed examination to check suitability and discuss time frames and costs. From there we take X-rays, photos and moulds to send to the aligner laboratory.'],
   ],
   related: ['cosmetic-veneers', 'teeth-whitening', 'check-ups-and-dental-cleans'],
   sources: ['adaBraces'],
@@ -545,7 +547,6 @@ ${steps([
   ['Clear costing', 'If removal is recommended, you receive a detailed costing of the procedure, and we find an appointment that suits you.'],
   ['Removal', 'Most wisdom teeth can be removed in the chair under local anaesthetic while you are awake. Some cases are referred to an oral surgeon for removal under sedation or general anaesthetic.'],
 ])}
-<p class="mt-2">Dr Alex Bornsztejn lists wisdom teeth removal among his areas of expertise.</p>
 <div class="callout warn"><p><strong>Call us</strong> if pain or swelling around a wisdom tooth is getting worse, or you have trouble opening your mouth. If swelling affects your breathing or swallowing, call <a href="tel:000">000</a>.</p></div>
 <p class="risk">${RISK}</p>`,
   faqs: [

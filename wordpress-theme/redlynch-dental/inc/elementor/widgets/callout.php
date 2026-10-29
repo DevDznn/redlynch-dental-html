@@ -1,7 +1,7 @@
 <?php
 /**
  * Callout: highlighted text blocks — "From the Redlynch Dental team" (the practice's own words),
- * lime, sand and warning callouts, and the "At a glance" style cards.
+ * lime, sand and warning callouts (optionally with a small button), and the "At a glance" style cards.
  *
  * @package Redlynch_Dental
  */
@@ -67,6 +67,21 @@ class Callout extends Base {
 			)
 		);
 		$this->add_control(
+			'button_label',
+			array(
+				'label'       => __( 'Button text (optional)', 'redlynch-dental' ),
+				'type'        => Controls_Manager::TEXT,
+				'description' => __( 'A small button with an arrow after the text, e.g. "Cosmetic dentistry options". Callout styles only.', 'redlynch-dental' ),
+			)
+		);
+		$this->add_control(
+			'button_link',
+			array(
+				'label' => __( 'Button link', 'redlynch-dental' ),
+				'type'  => Controls_Manager::URL,
+			)
+		);
+		$this->add_control(
 			'spacing',
 			array(
 				'label'   => __( 'Extra space above', 'redlynch-dental' ),
@@ -95,6 +110,18 @@ class Callout extends Base {
 				$style = 'card lime' === $s['style'] ? ' style="background:var(--lime-wash);border:0"' : '';
 				$this->out( '<aside class="card' . $space . '" data-reveal' . $style . '>' . ( $s['label'] ? '<h3>' . esc_html( $s['label'] ) . '</h3>' : '' ) . str_replace( '<ul class="ticks">', '<ul class="ticks" style="margin:0">', $text ) . '</aside>' );
 				return;
+		}
+		$url = $s['button_link']['url'] ?? '';
+		if ( '' !== trim( (string) $s['button_label'] ) && '' !== $url ) {
+			$text .= rd_button(
+				array(
+					'label'   => $s['button_label'],
+					'class'   => 'sm',
+					'url'     => $url,
+					'new_tab' => ! empty( $s['button_link']['is_external'] ),
+					'arrow'   => true,
+				)
+			);
 		}
 		$cls = in_array( $s['style'], array( 'callout', 'callout info', 'callout warn' ), true ) ? $s['style'] : 'callout';
 		$this->out( '<div class="' . esc_attr( $cls . $space ) . '">' . $text . '</div>' );

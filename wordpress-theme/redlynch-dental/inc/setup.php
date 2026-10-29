@@ -64,6 +64,9 @@ function rd_body_class( $classes ) {
 	} elseif ( is_404() ) {
 		$classes[] = 'page-404';
 	}
+	if ( rd_is_landing_page() ) {
+		$classes[] = 'lp';
+	}
 	if ( is_singular() && rd_is_elementor_page( get_queried_object_id() ) ) {
 		$classes[] = 'rd-elementor';
 	}

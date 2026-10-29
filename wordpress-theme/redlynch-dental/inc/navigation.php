@@ -133,7 +133,9 @@ class RD_Nav_Walker extends Walker_Nav_Menu {
 			}
 			$output .= '<li' . ( $cls ? ' class="' . esc_attr( implode( ' ', $cls ) ) . '"' : '' ) . '>';
 			if ( $this->has_children ) {
-				$output .= '<button class="dd-btn" type="button" aria-expanded="false" aria-controls="' . esc_attr( $this->sub_id( $item ) ) . '">' . esc_html( $title ) . rd_icon( 'chev' ) . '</button>';
+				// The mega menu's button carries position:relative, as in the static site's header.
+				$style   = $this->is_mega( $item ) ? ' style="position:relative"' : '';
+				$output .= '<button class="dd-btn" type="button" aria-expanded="false" aria-controls="' . esc_attr( $this->sub_id( $item ) ) . '"' . $style . '>' . esc_html( $title ) . rd_icon( 'chev' ) . '</button>';
 			} else {
 				$output .= $this->link( $item, esc_html( $title ) );
 			}

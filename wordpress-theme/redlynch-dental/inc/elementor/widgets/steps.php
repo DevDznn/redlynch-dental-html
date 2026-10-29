@@ -44,6 +44,7 @@ class Steps extends Base {
 				'options' => array(
 					'timeline' => __( 'Timeline (side by side)', 'redlynch-dental' ),
 					'numbered' => __( 'Numbered list (01, 02 …)', 'redlynch-dental' ),
+					'lp'       => __( 'Landing page step cards', 'redlynch-dental' ),
 				),
 			)
 		);
@@ -84,6 +85,14 @@ class Steps extends Base {
 				$out .= '<li><div><h3>' . esc_html( $i['title'] ) . '</h3><p>' . $this->inline( $i['text'] ) . '</p></div></li>';
 			}
 			$this->out( '<ol class="num-list">' . $out . '</ol>' );
+			return;
+		}
+		if ( 'lp' === $s['layout'] ) {
+			foreach ( $items as $i ) {
+				$out .= '<li><h3>' . esc_html( $i['title'] ) . '</h3><p>' . $this->inline( $i['text'] ) . '</p></li>';
+			}
+			// Four steps sit in one row of four; other counts in rows of three.
+			$this->out( '<ol class="lp-steps' . ( 4 === count( $items ) ? ' s4' : '' ) . '" data-reveal-group>' . $out . '</ol>' );
 			return;
 		}
 		foreach ( $items as $i ) {

@@ -91,7 +91,7 @@ class Service_Sidebar extends Base {
 					'class' => 'ghost-light',
 				)
 			) ) . '</div>
- <div class="side-box light"><h3>' . esc_html__( 'Opening hours', 'redlynch-dental' ) . '</h3>' . rd_hours_mini() . '<p class="fine" style="margin-top:12px">' . esc_html( rd_practice( 'hours_note' ) ) . '</p></div>
+ <div class="side-box light"><h3>' . esc_html__( 'Opening hours', 'redlynch-dental' ) . '</h3>' . rd_hours_mini() . rd_hours_note() . '</div>
  <div class="side-box light"><h3>' . esc_html__( 'Find us', 'redlynch-dental' ) . '</h3><p style="margin-bottom:8px">' . esc_html( rd_practice( 'street' ) ) . '<br>' . esc_html( rd_practice( 'suburb' ) . ' ' . rd_practice( 'state' ) . ' ' . rd_practice( 'postcode' ) ) . '</p><a class="text-link" href="' . esc_url( $contact ) . '">' . esc_html__( 'Map and directions', 'redlynch-dental' ) . ' ' . rd_icon( 'arrow' ) . '</a></div>
 </aside>'
 		);

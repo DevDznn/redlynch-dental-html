@@ -1,7 +1,7 @@
 <?php
 /**
  * Opening hours table, from the Customizer (Redlynch Dental › Opening hours). Today's row is
- * highlighted by main.js. Optionally inside a card with a heading and the after-hours note.
+ * highlighted by main.js. Optionally inside a card with a heading and the note under the hours (Customizer).
  *
  * @package Redlynch_Dental
  */
@@ -69,7 +69,7 @@ class Hours extends Base {
 			return;
 		}
 		if ( 'card' === $s['style'] ) {
-			$this->out( '<div class="card" data-reveal><h2 style="font-size:1.6rem">' . esc_html( $s['heading'] ) . '</h2>' . rd_hours_table() . '<p class="fine" style="margin-top:12px">' . esc_html( rd_practice( 'hours_note' ) ) . '</p></div>' );
+			$this->out( '<div class="card" data-reveal><h2 style="font-size:1.6rem">' . esc_html( $s['heading'] ) . '</h2>' . rd_hours_table() . rd_hours_note() . '</div>' );
 			return;
 		}
 		$this->out( rd_hours_table() );
