@@ -713,7 +713,12 @@ footer.site td:last-child{text-align:right;color:#E1E8E3}
 }
 @media (max-width:1020px){
   :root{--hdr-h:70px}
-  header.site .wrap,header.site.is-scrolled .wrap{min-height:70px}
+  header.site .wrap,header.site.is-scrolled .wrap{min-height:70px;gap:12px}
+  /* nav.main is off-canvas here, so its margin-left:auto no longer pushes the actions right */
+  .hdr-actions{margin-left:auto}
+  header.site .logo{flex:0 1 170px;min-width:0}
+  header.site.is-scrolled .logo{flex-basis:150px}
+  header.site .logo img,header.site.is-scrolled .logo img{width:100%}
   .burger{display:inline-flex}
   .hdr-actions .btn{display:none}
   .hdr-phone{width:44px;height:44px;justify-content:center;border-radius:50%;border:1px solid rgba(255,255,255,.25);padding:0}
